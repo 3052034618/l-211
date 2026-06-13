@@ -270,3 +270,90 @@ export const portOptions = [
   { label: '东京港', value: '东京港' },
   { label: '横滨港', value: '横滨港' }
 ]
+
+// 船队管理 - 船只列表
+export const mockVessels = [
+  {
+    id: 'vessel_001',
+    name: '远洋号',
+    type: '散货船',
+    totalFuelCapacity: 1400,
+    currentFuelLevel: 1035,
+    activeVoyageId: 'voyage_001',
+    lastSyncedAt: dayjs().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+    captain: '李船长',
+    chiefEngineer: '王轮机长',
+    anomalyCount: 2,
+    unresolvedAnomalyCount: 1
+  },
+  {
+    id: 'vessel_002',
+    name: '丰收号',
+    type: '集装箱船',
+    totalFuelCapacity: 2000,
+    currentFuelLevel: 1580,
+    activeVoyageId: 'voyage_004',
+    lastSyncedAt: dayjs().subtract(2, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+    captain: '陈船长',
+    chiefEngineer: '刘轮机长',
+    anomalyCount: 0,
+    unresolvedAnomalyCount: 0
+  },
+  {
+    id: 'vessel_003',
+    name: '顺达号',
+    type: '散货船',
+    totalFuelCapacity: 1200,
+    currentFuelLevel: 450,
+    activeVoyageId: undefined,
+    lastSyncedAt: dayjs().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    captain: '赵船长',
+    chiefEngineer: '孙轮机长',
+    anomalyCount: 1,
+    unresolvedAnomalyCount: 0
+  },
+  {
+    id: 'vessel_004',
+    name: '海隆号',
+    type: '油轮',
+    totalFuelCapacity: 3000,
+    currentFuelLevel: 2400,
+    activeVoyageId: 'voyage_005',
+    lastSyncedAt: dayjs().subtract(30, 'minute').format('YYYY-MM-DD HH:mm:ss'),
+    captain: '周船长',
+    chiefEngineer: '吴轮机长',
+    anomalyCount: 3,
+    unresolvedAnomalyCount: 2
+  },
+  {
+    id: 'vessel_005',
+    name: '安通号',
+    type: '化学品船',
+    totalFuelCapacity: 800,
+    currentFuelLevel: 620,
+    activeVoyageId: 'voyage_006',
+    lastSyncedAt: dayjs().subtract(5, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+    captain: '郑船长',
+    chiefEngineer: '钱轮机长',
+    anomalyCount: 0,
+    unresolvedAnomalyCount: 0
+  }
+]
+
+// 船队汇总数据
+export const mockFleetSummary = {
+  totalVessels: 5,
+  activeVoyages: 4,
+  totalFuelLevel: 6085,
+  totalAnomalies: 6,
+  unresolvedAnomalies: 3,
+  totalRefuelThisMonth: 1250.5,
+  totalConsumptionThisMonth: 890.3
+}
+
+// 管理人员账号
+export const mockManagerUser = {
+  id: 'user_manager_001',
+  name: '王经理',
+  role: 'manager' as const
+}

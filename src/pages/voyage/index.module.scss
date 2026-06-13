@@ -13,12 +13,57 @@
   position: relative;
 }
 
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-round;
+  background: rgba($color-text-white, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+.userDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.userName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.userRole {
+  font-size: $font-size-xs;
+  color: rgba($color-text-white, 0.7);
+}
+
+.switchIcon {
+  font-size: 28rpx;
+  color: rgba($color-text-white, 0.6);
+  margin-left: $spacing-xs;
+}
+
 .syncStatus {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   gap: $spacing-xs;
-  margin-bottom: $spacing-md;
 }
 
 .syncIndicator {
@@ -35,6 +80,31 @@
 .syncText {
   font-size: $font-size-sm;
   color: rgba($color-text-white, 0.8);
+}
+
+.offlineBanner {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(255, 152, 0, 0.2);
+  border-radius: $radius-md;
+  margin-bottom: $spacing-md;
+}
+
+.offlineIcon {
+  font-size: 28rpx;
+}
+
+.offlineText {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-white;
+}
+
+.offlineArrow {
+  font-size: 28rpx;
+  color: rgba($color-text-white, 0.6);
 }
 
 .voyageOverview {
@@ -160,6 +230,10 @@
 
   &.handover {
     background: linear-gradient(135deg, #795548 0%, #A1887F 100%);
+  }
+
+  &.fleet {
+    background: linear-gradient(135deg, #009688 0%, #4DB6AC 100%);
   }
 }
 

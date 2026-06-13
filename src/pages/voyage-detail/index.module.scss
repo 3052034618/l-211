@@ -1,0 +1,477 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.headerCard {
+  background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
+  margin: $spacing-lg $page-padding;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  color: $color-text-white;
+  box-shadow: $shadow-card;
+
+  .vesselName {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-sm;
+  }
+
+  .voyageRoute {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-md;
+    opacity: 0.9;
+    margin-bottom: $spacing-lg;
+
+    .routeArrow {
+      opacity: 0.7;
+    }
+  }
+
+  .voyageMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    .metaItem {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xs;
+
+      .metaLabel {
+        font-size: $font-size-xs;
+        opacity: 0.7;
+      }
+
+      .metaValue {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+      }
+    }
+  }
+
+  .statusBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-round;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    background: rgba(255, 255, 255, 0.2);
+    margin-top: $spacing-md;
+
+    &.active {
+      background: rgba(38, 166, 154, 0.8);
+    }
+
+    &.completed {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    &.draft {
+      background: rgba(255, 152, 0, 0.8);
+    }
+  }
+}
+
+.sectionCard {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-md;
+
+    .sectionTitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      .icon {
+        font-size: $font-size-xl;
+      }
+    }
+
+    .viewAll {
+      font-size: $font-size-sm;
+      color: $color-primary;
+    }
+  }
+}
+
+.infoGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-lg;
+
+  .infoItem {
+    flex: 1;
+    min-width: 200rpx;
+
+    .label {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .value {
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+.tankList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.tankItem {
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+
+  .tankHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-sm;
+
+    .tankName {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+    }
+
+    .tankFuelType {
+      font-size: $font-size-xs;
+      color: $color-primary;
+      background: rgba(30, 136, 229, 0.1);
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-round;
+    }
+  }
+
+  .tankProgress {
+    width: 100%;
+    height: 16rpx;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: $radius-round;
+    overflow: hidden;
+    margin-bottom: $spacing-xs;
+
+    .progressBar {
+      height: 100%;
+      border-radius: $radius-round;
+      transition: width $transition-base;
+
+      &.normal {
+        background: $color-fuel-normal;
+      }
+
+      &.warning {
+        background: $color-fuel-warning;
+      }
+
+      &.danger {
+        background: $color-fuel-danger;
+      }
+    }
+  }
+
+  .tankLevelInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+
+    .levelValue {
+      color: $color-text-primary;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+.recordList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.recordItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+
+  .recordInfo {
+    flex: 1;
+
+    .recordTitle {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .recordDesc {
+      font-size: $font-size-xs;
+      color: $color-text-secondary;
+    }
+  }
+
+  .recordArrow {
+    color: $color-text-tertiary;
+    font-size: $font-size-lg;
+    margin-left: $spacing-sm;
+  }
+}
+
+.anomalyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-md;
+  border-left: 6rpx solid $color-warning;
+
+  &.high {
+    border-left-color: $color-error;
+  }
+
+  &.medium {
+    border-left-color: $color-warning;
+  }
+
+  &.low {
+    border-left-color: $color-info;
+  }
+
+  .anomalyInfo {
+    flex: 1;
+
+    .anomalyTitle {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .anomalyDesc {
+      font-size: $font-size-xs;
+      color: $color-text-secondary;
+    }
+  }
+
+  .anomalyStatus {
+    font-size: $font-size-xs;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-round;
+    margin-left: $spacing-sm;
+
+    &.resolved {
+      background: rgba(38, 166, 154, 0.1);
+      color: $color-success;
+    }
+
+    &.unresolved {
+      background: rgba(244, 67, 54, 0.1);
+      color: $color-error;
+    }
+  }
+}
+
+.dailyList {
+  display: flex;
+  flex-direction: column;
+}
+
+.dailyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .dailyDate {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    .date {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+    }
+
+    .weather {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+
+  .dailyStats {
+    display: flex;
+    gap: $spacing-lg;
+    text-align: right;
+
+    .stat {
+      .value {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $color-text-primary;
+      }
+
+      .label {
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+        margin-top: $spacing-xs;
+      }
+    }
+  }
+}
+
+.handoverCard {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+
+  .handoverHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+
+    .handoverTitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-primary-dark;
+    }
+
+    .handoverStatus {
+      font-size: $font-size-xs;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-round;
+      background: $color-primary;
+      color: $color-text-white;
+    }
+  }
+
+  .handoverInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    .infoItem {
+      flex: 1;
+      min-width: 150rpx;
+
+      .label {
+        font-size: $font-size-xs;
+        color: $color-text-secondary;
+        margin-bottom: $spacing-xs;
+      }
+
+      .value {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $color-text-primary;
+      }
+    }
+  }
+
+  .viewDetail {
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $color-primary;
+    padding-top: $spacing-sm;
+    border-top: 1rpx solid rgba(30, 136, 229, 0.2);
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xxl $spacing-lg;
+  color: $color-text-tertiary;
+
+  .emptyIcon {
+    font-size: 80rpx;
+    margin-bottom: $spacing-sm;
+    display: block;
+  }
+
+  .emptyText {
+    font-size: $font-size-sm;
+  }
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: $shadow-float;
+  display: flex;
+  gap: $spacing-md;
+
+  .btnSecondary {
+    flex: 1;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-bg-hover;
+    color: $color-primary;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    @include button-reset;
+  }
+
+  .btnPrimary {
+    flex: 1;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-primary;
+    color: $color-text-white;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    @include button-reset;
+
+    &:active {
+      background: $color-primary-dark;
+    }
+  }
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}

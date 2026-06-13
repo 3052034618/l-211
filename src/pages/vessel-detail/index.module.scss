@@ -1,0 +1,439 @@
+.page {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding-bottom: 40rpx;
+}
+
+.vesselHeader {
+  background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+  padding: 32rpx;
+  color: #fff;
+}
+
+.vesselInfo {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.vesselIcon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+
+.vesselDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.vesselName {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.vesselType {
+  font-size: 26rpx;
+  opacity: 0.85;
+}
+
+.vesselStatus {
+  font-size: 24rpx;
+  padding: 6rpx 20rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.2);
+  align-self: flex-start;
+}
+
+.quickStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.quickStat {
+  text-align: center;
+  padding: 16rpx;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12rpx;
+}
+
+.quickStatValue {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+
+.quickStatLabel {
+  font-size: 22rpx;
+  opacity: 0.8;
+}
+
+.section {
+  margin: 24rpx 32rpx 0;
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx;
+  border-bottom: 1rpx solid #F0F2F5;
+}
+
+.sectionTitle {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #263238;
+}
+
+.sectionAction {
+  font-size: 26rpx;
+  color: #1E88E5;
+}
+
+.tankList {
+  padding: 0 28rpx;
+}
+
+.tankItem {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5F7FA;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.tankInfo {
+  flex: 1;
+}
+
+.tankName {
+  font-size: 28rpx;
+  color: #263238;
+  margin-bottom: 8rpx;
+}
+
+.tankProgress {
+  width: 100%;
+  height: 12rpx;
+  background: #ECEFF1;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.tankProgressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.tankProgressBar.warning {
+  background: linear-gradient(90deg, #FF9800 0%, #FFC107 100%);
+}
+
+.tankProgressBar.danger {
+  background: linear-gradient(90deg, #F44336 0%, #FF5722 100%);
+}
+
+.tankLevel {
+  min-width: 160rpx;
+  text-align: right;
+  margin-left: 20rpx;
+}
+
+.tankLevelValue {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #263238;
+}
+
+.tankLevelLabel {
+  font-size: 22rpx;
+  color: #90A4AE;
+}
+
+.voyageTab {
+  display: flex;
+  border-bottom: 1rpx solid #F0F2F5;
+}
+
+.tabItem {
+  flex: 1;
+  padding: 24rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  color: #78909C;
+  position: relative;
+  
+  &.active {
+    color: #1E88E5;
+    font-weight: 600;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48rpx;
+      height: 6rpx;
+      background: #1E88E5;
+      border-radius: 3rpx;
+    }
+  }
+}
+
+.voyageList {
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+.voyageItem {
+  display: flex;
+  padding: 24rpx 28rpx;
+  border-bottom: 1rpx solid #F5F7FA;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.voyageRoute {
+  flex: 1;
+}
+
+.voyagePorts {
+  font-size: 28rpx;
+  color: #263238;
+  margin-bottom: 8rpx;
+}
+
+.voyageDate {
+  font-size: 24rpx;
+  color: #90A4AE;
+}
+
+.voyageMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6rpx;
+}
+
+.voyageStatus {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+  
+  &.active {
+    background: #E8F5E9;
+    color: #4CAF50;
+  }
+  
+  &.completed {
+    background: #E3F2FD;
+    color: #1E88E5;
+  }
+  
+  &.draft {
+    background: #FFF3E0;
+    color: #FF9800;
+  }
+}
+
+.voyageFuel {
+  font-size: 24rpx;
+  color: #78909C;
+}
+
+.anomalySummary {
+  padding: 20rpx 28rpx;
+}
+
+.anomalyStats {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.anomalyStat {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  background: #F8FAFB;
+  border-radius: 12rpx;
+}
+
+.anomalyStatValue {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #263238;
+  margin-bottom: 8rpx;
+}
+
+.anomalyStatValue.warning {
+  color: #FF9800;
+}
+
+.anomalyStatValue.danger {
+  color: #F44336;
+}
+
+.anomalyStatLabel {
+  font-size: 24rpx;
+  color: #78909C;
+}
+
+.anomalyList {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.anomalyItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  padding: 16rpx;
+  background: #FFF8E1;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #FFC107;
+}
+
+.anomalyItem.high {
+  background: #FFEBEE;
+  border-left-color: #F44336;
+}
+
+.anomalyItem.medium {
+  background: #FFF3E0;
+  border-left-color: #FF9800;
+}
+
+.anomalyItem.low {
+  background: #E8F5E9;
+  border-left-color: #4CAF50;
+}
+
+.anomalyIcon {
+  font-size: 28rpx;
+}
+
+.anomalyContent {
+  flex: 1;
+}
+
+.anomalyDesc {
+  font-size: 26rpx;
+  color: #263238;
+  margin-bottom: 6rpx;
+}
+
+.anomalyDate {
+  font-size: 22rpx;
+  color: #90A4AE;
+}
+
+.anomalyStatus {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  background: #fff;
+  
+  &.resolved {
+    color: #4CAF50;
+  }
+  
+  &.pending {
+    color: #FF9800;
+  }
+}
+
+.portSummary {
+  padding: 20rpx 28rpx;
+}
+
+.portItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5F7FA;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.portName {
+  font-size: 28rpx;
+  color: #263238;
+}
+
+.portStats {
+  text-align: right;
+}
+
+.portQuantity {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #263238;
+}
+
+.portAmount {
+  font-size: 22rpx;
+  color: #78909C;
+}
+
+.emptyState {
+  padding: 60rpx 28rpx;
+  text-align: center;
+  color: #90A4AE;
+}
+
+.emptyIcon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.emptyText {
+  font-size: 26rpx;
+}
+
+.syncInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 20rpx 28rpx;
+  font-size: 24rpx;
+  color: #78909C;
+  border-top: 1rpx solid #F0F2F5;
+}
+
+.syncIndicator {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #4CAF50;
+}
+
+.syncIndicator.offline {
+  background: #FFC107;
+}

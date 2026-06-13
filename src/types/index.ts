@@ -165,3 +165,63 @@ export interface StatCardData {
   trendValue?: number
   color?: string
 }
+
+// 船只信息
+export interface Vessel {
+  id: string
+  name: string
+  type: string
+  totalFuelCapacity: number
+  currentFuelLevel: number
+  activeVoyageId?: string
+  lastSyncedAt?: string
+  captain?: string
+  chiefEngineer?: string
+  anomalyCount: number
+  unresolvedAnomalyCount: number
+}
+
+// 船队汇总数据
+export interface FleetSummary {
+  totalVessels: number
+  activeVoyages: number
+  totalFuelLevel: number
+  totalAnomalies: number
+  unresolvedAnomalies: number
+  totalRefuelThisMonth: number
+  totalConsumptionThisMonth: number
+}
+
+// 离线操作类型
+export type OfflineOperationType = 
+  | 'add_refuel' 
+  | 'add_engine_record' 
+  | 'add_daily_consumption' 
+  | 'update_tank' 
+  | 'resolve_anomaly'
+  | 'create_voyage'
+  | 'confirm_handover'
+
+// 离线队列项
+export interface OfflineQueueItem {
+  id: string
+  type: OfflineOperationType
+  voyageId: string
+  data: any
+  createdAt: string
+  status: 'pending' | 'syncing' | 'failed'
+  failedReason?: string
+  retryCount: number
+}
+
+// 导出文件类型
+export type ExportType = 'daily_report' | 'handover' | 'fuel_summary'
+
+// 导出结果
+export interface ExportResult {
+  success: boolean
+  fileName: string
+  filePath?: string
+  fileSize?: number
+  message: string
+}

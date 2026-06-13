@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { View, Text, ScrollView, Button } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import classnames from 'classnames'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
@@ -10,8 +10,13 @@ import { formatFuelAmount, calculateTankPercentage } from '@/utils/fuelCalculato
 import dayjs from 'dayjs'
 
 const HandoverPage: React.FC = () => {
-  const { currentVoyage, generateHandoverReport, confirmHandover, user } = useVoyageStore()
+  const { currentVoyage, generateHandoverReport, confirmHandover, user, exportDailyReport, exportHandover, loadData } = useVoyageStore()
   const [reportGenerated, setReportGenerated] = useState(false)
+  const [exportLoading, setExportLoading] = useState(false)
+
+  useDidShow(() => {
+    loadData()
+  })
 
 
   const voyage = currentVoyage || mockCurrentVoyage
@@ -98,10 +103,80 @@ const HandoverPage: React.FC = () => {
     })
   }
 
-  const handleExport = () => {
-    Taro.showToast({
-      title: '导出功能开发中',
-      icon: 'none'
+  const handleExportDaily = async () => {
+    if (!voyage) return
+    setExportLoading(true)
+    try {
+      const today = dayjs().format('YYYY-MM-DD')
+      const result = await exportDailyReport(voyage.id, today)
+      if (result.success) {
+        Taro.showModal({
+          title: '导出成功',
+          content: `文件「${result.fileName}」已保存，可在文件管理器中查看`,
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      } else {
+        Taro.showToast({
+          title: result.message || '导出失败',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      Taro.showToast({
+        title: '导出失败',
+        icon: 'error'
+      })
+    } finally {
+      setExportLoading(false)
+    }
+  }
+
+  const handleExportHandover = async () => {
+    if (!voyage) return
+    setExportLoading(true)
+    try {
+      const result = await exportHandover(voyage.id)
+      if (result.success) {
+        Taro.showModal({
+          title: '导出成功',
+          content: `交接单「${result.fileName}」已保存，可分享或存档`,
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      } else {
+        Taro.showToast({
+          title: result.message || '导出失败',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      Taro.showToast({
+        title: '导出失败',
+        icon: 'error'
+      })
+    } finally {
+      setExportLoading(false)
+    }
+  }
+
+  const handleExportMenu = () => {
+    Taro.showActionSheet({
+      itemList: ['导出燃油日报', '导出交接单'],
+      success: async (res) => {
+        if (res.tapIndex === 0) {
+          await handleExportDaily()
+        } else if (res.tapIndex === 1) {
+          if (!reportGenerated && !voyage?.handoverReport) {
+            Taro.showToast({
+              title: '请先生成交接单',
+              icon: 'none'
+            })
+            return
+          }
+          await handleExportHandover()
+        }
+      }
     })
   }
 
@@ -303,8 +378,8 @@ const HandoverPage: React.FC = () => {
 
       {/* 底部操作栏 */}
       <View className={styles.bottomBar}>
-        <Button className={styles.btnSecondary} onClick={handleExport}>
-          导出日报
+        <Button className={styles.btnSecondary} onClick={handleExportMenu} loading={exportLoading}>
+          导出
         </Button>
         {!reportGenerated && !handoverReport ? (
           <Button className={styles.btnPrimary} onClick={handleGenerateReport}>

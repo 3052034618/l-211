@@ -88,20 +88,23 @@ const HistoryPage: React.FC = () => {
   }
 
   const handleVoyageClick = (voyage: Voyage) => {
-    if (voyage.status === 'active') {
-      Taro.showModal({
-        title: '切换航次',
-        content: `是否切换到当前航次「${voyage.fromPort} → ${voyage.toPort}」？`,
-        success: (res) => {
-          if (res.confirm) {
-            setCurrentVoyage(voyage)
-            Taro.switchTab({ url: '/pages/voyage/index' })
-          }
+    Taro.navigateTo({
+      url: `/pages/voyage-detail/index?id=${voyage.id}`
+    })
+  }
+
+  const handleSetCurrentVoyage = (voyage: Voyage, e: any) => {
+    e.stopPropagation()
+    Taro.showModal({
+      title: '切换航次',
+      content: `是否切换到当前航次「${voyage.fromPort} → ${voyage.toPort}」？`,
+      success: (res) => {
+        if (res.confirm) {
+          setCurrentVoyage(voyage)
+          Taro.switchTab({ url: '/pages/voyage/index' })
         }
-      })
-    } else {
-      Taro.showToast({ title: `航次 ${voyage.fromPort} → ${voyage.toPort}`, icon: 'none' })
-    }
+      }
+    })
   }
 
   const filters = [

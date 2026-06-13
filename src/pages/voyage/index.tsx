@@ -6,20 +6,24 @@ import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import StatCard from '@/components/StatCard'
 import AnomalyBadge from '@/components/AnomalyBadge'
-import { mockCurrentVoyage, mockVoyageList, mockUser } from '@/data/mockData'
+import { mockCurrentVoyage, mockVoyageList, mockUser, mockManagerUser } from '@/data/mockData'
 import { formatFuelAmount } from '@/utils/fuelCalculator'
 import dayjs from 'dayjs'
+import type { User } from '@/types'
 
 const VoyagePage: React.FC = () => {
   const {
     currentVoyage,
     voyageList,
     isOffline,
+    user,
+    offlineQueue,
     setCurrentVoyage,
     setVoyageList,
     setUser,
     loadData,
-    syncData
+    syncData,
+    syncOfflineData
   } = useVoyageStore()
 
   const [, setIsRefreshing] = useState(false)
@@ -74,10 +78,15 @@ const VoyagePage: React.FC = () => {
     { key: 'tank', label: '录入油舱', icon: '🛢️', color: 'tank' },
     { key: 'refuel', label: '登记加油', icon: '⛽', color: 'refuel' },
     { key: 'engine', label: '记录主机', icon: '⚙️', color: 'engine' },
-    { key: 'handover', label: '生成交接', icon: '📋', color: 'handover' }
+    { key: 'handover', label: '生成交接', icon: '📋', color: 'handover' },
+    { key: 'fleet', label: '船队管理', icon: '🚢', color: 'fleet' }
   ]
 
   const handleActionClick = (key: string) => {
+    if (key === 'fleet') {
+      handleFleetManage()
+      return
+    }
     const routes: Record<string, string> = {
       create: '/pages/create-voyage/index',
       tank: '/pages/tank/index',
@@ -100,20 +109,92 @@ const VoyagePage: React.FC = () => {
 
   const handleHistoryClick = (voyageId: string) => {
     Taro.navigateTo({
-      url: `/pages/history/index?id=${voyageId}`
+      url: `/pages/voyage-detail/index?id=${voyageId}`
     })
+  }
+
+  const handleRoleSwitch = () => {
+    const items = [
+      { text: '船员视角', value: 'crew' },
+      { text: '管理人员视角', value: 'manager' }
+    ]
+    
+    Taro.showActionSheet({
+      itemList: items.map(i => i.text),
+      success: (res) => {
+        const selected = items[res.tapIndex]
+        if (selected.value === 'manager') {
+          setUser(mockManagerUser as User)
+          Taro.navigateTo({ url: '/pages/fleet/index' })
+        } else {
+          setUser(mockUser)
+        }
+      }
+    })
+  }
+
+  const handleFleetManage = () => {
+    if (user?.role === 'manager') {
+      Taro.navigateTo({ url: '/pages/fleet/index' })
+    } else {
+      Taro.showModal({
+        title: '切换身份',
+        content: '船队管理需要管理人员身份，是否切换？',
+        success: (res) => {
+          if (res.confirm) {
+            setUser(mockManagerUser as User)
+            Taro.navigateTo({ url: '/pages/fleet/index' })
+          }
+        }
+      })
+    }
+  }
+
+  const handleSyncOffline = async () => {
+    if (offlineQueue.length === 0) {
+      Taro.showToast({ title: '没有待同步数据', icon: 'none' })
+      return
+    }
+    try {
+      await syncOfflineData()
+      Taro.showToast({ title: '同步完成', icon: 'success' })
+    } catch (error) {
+      Taro.showToast({ title: '同步失败', icon: 'error' })
+    }
   }
 
   return (
     <ScrollView className={styles.page} scrollY>
       {/* 顶部航次概览 */}
       <View className={styles.headerSection}>
-        <View className={styles.syncStatus}>
-          <View className={classnames(styles.syncIndicator, isOffline && styles.offline)} />
-          <Text className={styles.syncText}>
-            {isOffline ? '离线模式' : `已同步 · ${currentVoyage?.syncedAt ? dayjs(currentVoyage.syncedAt).format('HH:mm') : '刚刚'}`}
-          </Text>
+        <View className={styles.topBar}>
+          <View className={styles.userInfo} onClick={handleRoleSwitch}>
+            <View className={styles.avatar}>
+              <Text>{user?.role === 'manager' ? '👔' : '👨‍✈️'}</Text>
+            </View>
+            <View className={styles.userDetail}>
+              <Text className={styles.userName}>{user?.name || '未登录'}</Text>
+              <Text className={styles.userRole}>{user?.role === 'manager' ? '管理人员' : '船员'}</Text>
+            </View>
+            <Text className={styles.switchIcon}>⇄</Text>
+          </View>
+          <View className={styles.syncStatus}>
+            <View className={classnames(styles.syncIndicator, isOffline && styles.offline)} />
+            <Text className={styles.syncText}>
+              {isOffline ? '离线模式' : '已同步'}
+            </Text>
+          </View>
         </View>
+
+        {offlineQueue.length > 0 && (
+          <View className={styles.offlineBanner} onClick={handleSyncOffline}>
+            <Text className={styles.offlineIcon}>📡</Text>
+            <Text className={styles.offlineText}>
+              {offlineQueue.length}条数据待同步，点击立即上传
+            </Text>
+            <Text className={styles.offlineArrow}>›</Text>
+          </View>
+        )}
 
         {currentVoyage && (
           <View className={styles.voyageOverview}>

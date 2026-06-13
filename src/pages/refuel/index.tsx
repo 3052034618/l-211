@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { View, Text, ScrollView, Button } from '@tarojs/components'
-import Taro, { usePullDownRefresh } from '@tarojs/taro'
+import Taro, { usePullDownRefresh, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import RefuelItem from '@/components/RefuelItem'
 import FormField from '@/components/FormField'
-import { mockRefuelRecords, portOptions, fuelTypeOptions, mockTanks } from '@/data/mockData'
+import { mockRefuelRecords, portOptions, fuelTypeOptions } from '@/data/mockData'
 import type { RefuelRecord } from '@/types'
 import { formatFuelAmount } from '@/utils/fuelCalculator'
 import dayjs from 'dayjs'
@@ -18,7 +18,7 @@ interface PortSummary {
 }
 
 const RefuelPage: React.FC = () => {
-  const { currentVoyage, addRefuelRecord, syncData } = useVoyageStore()
+  const { currentVoyage, addRefuelRecord, syncData, loadData, isOffline, offlineQueue } = useVoyageStore()
   const [, setIsRefreshing] = useState(false)
   const [addModalVisible, setAddModalVisible] = useState(false)
   const [formData, setFormData] = useState({
@@ -32,6 +32,10 @@ const RefuelPage: React.FC = () => {
     remarks: ''
   })
   const [receiptImages, setReceiptImages] = useState<string[]>([])
+
+  useDidShow(() => {
+    loadData()
+  })
 
   usePullDownRefresh(() => {
     handleRefresh()
@@ -71,16 +75,43 @@ const RefuelPage: React.FC = () => {
   const totalQuantity = records.reduce((sum, r) => sum + r.quantity, 0)
   const totalAmount = records.reduce((sum, r) => sum + r.totalAmount, 0)
 
-  const tankOptions = mockTanks.map(t => ({ label: t.name, value: t.id }))
+  const tanks = currentVoyage?.tanks || []
+  const tankOptions = tanks.length > 0 
+    ? tanks.map(t => ({ label: `${t.name} (${t.fuelType})`, value: t.id }))
+    : []
+
+  useEffect(() => {
+    if (tanks.length > 0 && formData.tankId === '') {
+      setFormData(prev => ({ ...prev, tankId: tanks[0].id, fuelType: tanks[0].fuelType }))
+    }
+  }, [tanks, formData.tankId])
+
+  const selectedTank = useMemo(() => {
+    return tanks.find(t => t.id === formData.tankId)
+  }, [tanks, formData.tankId])
 
   const handleAddRefuel = () => {
+    if (!currentVoyage) {
+      Taro.showToast({
+        title: '请先创建航次',
+        icon: 'none'
+      })
+      return
+    }
+    if (tanks.length === 0) {
+      Taro.showToast({
+        title: '请先配置油舱',
+        icon: 'none'
+      })
+      return
+    }
     setFormData({
       date: dayjs().format('YYYY-MM-DD'),
       port: '',
-      tankId: '',
+      tankId: tanks[0]?.id || '',
       quantity: '',
       unitPrice: '',
-      fuelType: '',
+      fuelType: tanks[0]?.fuelType || '',
       supplier: '',
       remarks: ''
     })
@@ -121,7 +152,13 @@ const RefuelPage: React.FC = () => {
     const qty = Number(quantity)
     const price = Number(unitPrice)
 
-    const selectedTank = mockTanks.find(t => t.id === tankId)
+    if (selectedTank && qty + selectedTank.currentLevel > selectedTank.capacity) {
+      Taro.showToast({
+        title: '加油量超过油舱容量',
+        icon: 'none'
+      })
+      return
+    }
 
     const newRecord: RefuelRecord = {
       id: `refuel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -138,13 +175,15 @@ const RefuelPage: React.FC = () => {
       receiptImage: receiptImages[0],
       remarks: formData.remarks,
       operator: currentVoyage?.chiefEngineer || '轮机员',
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss')
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      isSynced: !isOffline,
+      syncedAt: isOffline ? undefined : dayjs().format('YYYY-MM-DD HH:mm:ss')
     }
 
     addRefuelRecord(newRecord)
 
     Taro.showToast({
-      title: '登记成功',
+      title: isOffline ? '已暂存本地' : '登记成功',
       icon: 'success'
     })
 
