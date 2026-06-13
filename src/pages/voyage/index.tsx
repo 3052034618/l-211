@@ -151,16 +151,7 @@ const VoyagePage: React.FC = () => {
   }
 
   const handleSyncOffline = async () => {
-    if (offlineQueue.length === 0) {
-      Taro.showToast({ title: '没有待同步数据', icon: 'none' })
-      return
-    }
-    try {
-      await syncOfflineData()
-      Taro.showToast({ title: '同步完成', icon: 'success' })
-    } catch (error) {
-      Taro.showToast({ title: '同步失败', icon: 'error' })
-    }
+    Taro.navigateTo({ url: '/pages/offline-queue/index' })
   }
 
   return (

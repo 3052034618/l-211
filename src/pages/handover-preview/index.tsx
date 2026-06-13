@@ -1,45 +1,58 @@
 import React, { useState, useMemo } from 'react'
 import { View, Text, ScrollView, Button } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import { mockCurrentVoyage, mockUser } from '@/data/mockData'
-import type { HandoverReport } from '@/types'
+import type { HandoverReport, Voyage } from '@/types'
 import dayjs from 'dayjs'
 
 const HandoverPreviewPage: React.FC = () => {
-  const { currentVoyage, confirmHandover, user, setUser, generateHandoverReport } = useVoyageStore()
+  const router = useRouter()
+  const { currentVoyage, confirmHandover, user, setUser, generateHandoverReport, getVoyageById, loadData, exportHandover } = useVoyageStore()
   const [report, setReport] = useState<HandoverReport | null>(null)
+  const [voyage, setVoyage] = useState<Voyage | null>(null)
   const [isConfirming, setIsConfirming] = useState(false)
 
-  useDidShow(() => {
+  useDidShow(async () => {
+    await loadData()
     if (!user) setUser(mockUser)
 
-    if (currentVoyage?.handoverReport) {
-      setReport(currentVoyage.handoverReport)
+    const voyageId = router.params.id
+    let targetVoyage: Voyage | null | undefined = currentVoyage
+    
+    if (voyageId) {
+      targetVoyage = getVoyageById(voyageId) || currentVoyage
+    }
+    
+    setVoyage(targetVoyage || null)
+
+    if (targetVoyage?.handoverReport) {
+      setReport(targetVoyage.handoverReport)
     } else {
       const generated = generateHandoverReport()
       if (generated) {
         setReport(generated)
       } else {
+        const fallbackVoyage = targetVoyage || mockCurrentVoyage
         setReport({
           id: `handover_${Date.now()}`,
-          voyageId: mockCurrentVoyage.id,
-          vesselName: mockCurrentVoyage.vesselName,
-          fromPort: mockCurrentVoyage.fromPort,
-          toPort: mockCurrentVoyage.toPort,
-          departureDate: mockCurrentVoyage.departureDate,
+          voyageId: fallbackVoyage.id,
+          vesselName: fallbackVoyage.vesselName,
+          fromPort: fallbackVoyage.fromPort,
+          toPort: fallbackVoyage.toPort,
+          departureDate: fallbackVoyage.departureDate,
           arrivalDate: dayjs().format('YYYY-MM-DD'),
-          totalFuelConsumed: mockCurrentVoyage.totalFuelConsumed || 0,
-          totalRefueled: mockCurrentVoyage.refuelRecords.reduce((sum, r) => sum + r.quantity, 0),
-          avgDailyConsumption: mockCurrentVoyage.avgDailyConsumption || 0,
-          tankLevels: mockCurrentVoyage.tanks.map(t => ({
+          totalFuelConsumed: fallbackVoyage.totalFuelConsumed || 0,
+          totalRefueled: fallbackVoyage.refuelRecords.reduce((sum, r) => sum + r.quantity, 0),
+          avgDailyConsumption: fallbackVoyage.avgDailyConsumption || 0,
+          tankLevels: fallbackVoyage.tanks.map(t => ({
             tankId: t.id,
             tankName: t.name,
             level: t.currentLevel,
             fuelType: t.fuelType
           })),
-          anomalies: mockCurrentVoyage.anomalies,
+          anomalies: fallbackVoyage.anomalies,
           preparedBy: mockUser.name,
           status: 'draft'
         })
@@ -62,8 +75,8 @@ const HandoverPreviewPage: React.FC = () => {
   }
 
   const getTotalCapacity = () => {
-    if (!currentVoyage) return 0
-    return currentVoyage.tanks.reduce((sum, t) => sum + t.capacity, 0)
+    if (!voyage) return 0
+    return voyage.tanks.reduce((sum, t) => sum + t.capacity, 0)
   }
 
   const getSeverityText = (severity: string, isResolved: boolean) => {
@@ -76,18 +89,28 @@ const HandoverPreviewPage: React.FC = () => {
     return map[severity] || '未知'
   }
 
-  const handleExport = () => {
-    Taro.showLoading({ title: '生成中...' })
-    setTimeout(() => {
-      Taro.hideLoading()
-      Taro.showActionSheet({
-        itemList: ['导出为PDF', '导出为Excel', '发送邮件'],
-        success: (res) => {
-          const messages = ['PDF文件已生成', 'Excel文件已生成', '已发送至船队管理员邮箱']
-          Taro.showToast({ title: messages[res.tapIndex], icon: 'success' })
-        }
+  const handleExport = async () => {
+    if (!report || !voyage) return
+    try {
+      const result = await exportHandover(voyage.id)
+      if (result.success) {
+        Taro.showModal({
+          title: '导出成功',
+          content: `交接单「${result.fileName}」已保存`,
+          showCancel: false
+        })
+      } else {
+        Taro.showToast({
+          title: result.message || '导出失败',
+          icon: 'none'
+        })
+      }
+    } catch (error) {
+      Taro.showToast({
+        title: '导出失败',
+        icon: 'error'
       })
-    }, 1500)
+    }
   }
 
   const handleConfirm = async () => {
@@ -209,11 +232,11 @@ const HandoverPreviewPage: React.FC = () => {
           </View>
           <View className={styles.infoRow}>
             <Text className={styles.label}>船长</Text>
-            <Text className={styles.value}>{currentVoyage?.captain || '--'}</Text>
+            <Text className={styles.value}>{voyage?.captain || '--'}</Text>
           </View>
           <View className={styles.infoRow}>
             <Text className={styles.label}>轮机长</Text>
-            <Text className={styles.value}>{currentVoyage?.chiefEngineer || '--'}</Text>
+            <Text className={styles.value}>{voyage?.chiefEngineer || '--'}</Text>
           </View>
           <View className={styles.infoRow}>
             <Text className={styles.label}>制表人</Text>
@@ -228,7 +251,7 @@ const HandoverPreviewPage: React.FC = () => {
           </View>
           <View className={styles.tankList}>
             {report.tankLevels.map((tank, index) => {
-              const fullTank = currentVoyage?.tanks.find(t => t.id === tank.tankId)
+              const fullTank = voyage?.tanks.find(t => t.id === tank.tankId)
               const capacity = fullTank?.capacity || 500
               const percentage = ((tank.level / capacity) * 100).toFixed(1)
               return (
@@ -293,7 +316,7 @@ const HandoverPreviewPage: React.FC = () => {
           </View>
           <View className={styles.infoRow}>
             <Text className={styles.label}>总航程</Text>
-            <Text className={styles.value}>{currentVoyage?.totalDistance?.toFixed(0) || '--'} 海里</Text>
+            <Text className={styles.value}>{voyage?.totalDistance?.toFixed(0) || '--'} 海里</Text>
           </View>
           <View className={styles.infoRow}>
             <Text className={styles.label}>航行天数</Text>

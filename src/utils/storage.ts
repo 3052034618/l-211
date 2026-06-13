@@ -94,3 +94,12 @@ export const saveUser = async (user: any): Promise<void> => {
 export const getUser = async (): Promise<any | null> => {
   return await getStorage<any>('user', null)
 }
+
+export const saveSyncRecords = async (records: any[]): Promise<void> => {
+  await setStorage('syncRecords', records)
+}
+
+export const loadSyncRecords = async (): Promise<any[]> => {
+  const data = await getStorage<any[]>('syncRecords', [])
+  return data || []
+}

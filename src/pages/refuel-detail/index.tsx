@@ -4,26 +4,31 @@ import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import { mockRefuelRecords } from '@/data/mockData'
-import type { RefuelRecord } from '@/types'
+import type { RefuelRecord, Voyage } from '@/types'
 import dayjs from 'dayjs'
 
 const RefuelDetailPage: React.FC = () => {
   const router = useRouter()
-  const { currentVoyage } = useVoyageStore()
+  const { getRefuelRecordById, loadData } = useVoyageStore()
   const [record, setRecord] = useState<RefuelRecord | null>(null)
+  const [voyage, setVoyage] = useState<Voyage | null>(null)
 
-  useDidShow(() => {
+  useDidShow(async () => {
+    await loadData()
     const recordId = router.params.id
-    if (recordId && currentVoyage) {
-      const found = currentVoyage.refuelRecords.find(r => r.id === recordId)
-      if (found) {
-        setRecord(found)
+    if (recordId) {
+      const { record: foundRecord, voyage: foundVoyage } = getRefuelRecordById(recordId)
+      if (foundRecord) {
+        setRecord(foundRecord)
+        setVoyage(foundVoyage || null)
       } else {
         const mockFound = mockRefuelRecords.find(r => r.id === recordId)
-        if (mockFound) setRecord(mockFound)
+        if (mockFound) {
+          setRecord(mockFound)
+        }
       }
     }
-    if (!record) {
+    if (!record && !router.params.id) {
       setRecord(mockRefuelRecords[0])
     }
   })
@@ -121,7 +126,7 @@ const RefuelDetailPage: React.FC = () => {
         </View>
         <View className={styles.infoRow}>
           <Text className={styles.label}>所属航次</Text>
-          <Text className={styles.value}>{currentVoyage?.fromPort || '--'} → {currentVoyage?.toPort || '--'}</Text>
+          <Text className={styles.value}>{voyage ? `${voyage.fromPort} → ${voyage.toPort}` : '--'}</Text>
         </View>
       </View>
 

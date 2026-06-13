@@ -135,6 +135,17 @@ const RefuelPage: React.FC = () => {
   }
 
   const handleFormChange = (key: string, value: string | number) => {
+    if (key === 'tankId') {
+      const tank = tanks.find(t => t.id === value)
+      if (tank) {
+        setFormData(prev => ({ 
+          ...prev, 
+          [key]: value,
+          fuelType: tank.fuelType
+        }))
+        return
+      }
+    }
     setFormData(prev => ({ ...prev, [key]: value }))
   }
 
@@ -315,13 +326,33 @@ const RefuelPage: React.FC = () => {
               onChange={v => handleFormChange('tankId', v)}
             />
 
+            {selectedTank && (
+              <View className={styles.tankInfoCard}>
+                <View className={styles.tankInfoRow}>
+                  <Text className={styles.tankInfoLabel}>当前存量</Text>
+                  <Text className={styles.tankInfoValue}>{selectedTank.currentLevel.toFixed(2)} 吨</Text>
+                </View>
+                <View className={styles.tankInfoRow}>
+                  <Text className={styles.tankInfoLabel}>油舱容量</Text>
+                  <Text className={styles.tankInfoValue}>{selectedTank.capacity} 吨</Text>
+                </View>
+                <View className={styles.tankInfoRow}>
+                  <Text className={styles.tankInfoLabel}>可加容量</Text>
+                  <Text className={classnames(styles.tankInfoValue, styles.highlight)}>
+                    {(selectedTank.capacity - selectedTank.currentLevel).toFixed(2)} 吨
+                  </Text>
+                </View>
+              </View>
+            )}
+
             <FormField
               key='fuelType'
               label='油品类型'
               type='select'
               required
+              disabled
               options={fuelTypeOptions}
-              placeholder='请选择油品'
+              placeholder='自动匹配'
               value={formData.fuelType}
               onChange={v => handleFormChange('fuelType', v)}
             />

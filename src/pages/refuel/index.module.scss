@@ -289,3 +289,37 @@
   font-size: $font-size-md;
   color: $color-text-tertiary;
 }
+
+.tankInfoCard {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  border: 1rpx solid #90CAF9;
+}
+
+.tankInfoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-sm 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1rpx dashed rgba($color-primary, 0.2);
+  }
+}
+
+.tankInfoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.tankInfoValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  
+  &.highlight {
+    color: $color-primary;
+  }
+}

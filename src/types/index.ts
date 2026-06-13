@@ -202,16 +202,41 @@ export type OfflineOperationType =
   | 'create_voyage'
   | 'confirm_handover'
 
+// 离线队列项状态
+export type OfflineQueueStatus = 'pending' | 'syncing' | 'success' | 'failed'
+
 // 离线队列项
 export interface OfflineQueueItem {
   id: string
   type: OfflineOperationType
   voyageId: string
+  vesselName?: string
   data: any
   createdAt: string
-  status: 'pending' | 'syncing' | 'failed'
+  status: OfflineQueueStatus
   failedReason?: string
   retryCount: number
+  syncedAt?: string
+  syncDuration?: number
+}
+
+// 同步记录
+export interface SyncRecord {
+  id: string
+  vesselName: string
+  vesselId: string
+  syncStartedAt: string
+  syncCompletedAt: string
+  recordCount: number
+  successCount: number
+  failedCount: number
+  operationTypes: string[]
+  status: 'success' | 'partial' | 'failed'
+  failedRecords?: Array<{
+    id: string
+    type: string
+    reason: string
+  }>
 }
 
 // 导出文件类型

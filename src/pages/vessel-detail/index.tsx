@@ -18,6 +18,7 @@ const VesselDetailPage: React.FC = () => {
   const {
     vessels,
     voyageList,
+    user,
     isLoading,
     isOffline,
     loadFleetData,
@@ -163,6 +164,14 @@ const VesselDetailPage: React.FC = () => {
     Taro.navigateTo({
       url: `/pages/anomaly-detail/index?id=${anomalyId}`
     })
+  }
+
+  const handleTrackingClick = () => {
+    if (vesselId || vessel?.id) {
+      Taro.navigateTo({
+        url: `/pages/vessel-tracking/index?vesselId=${vesselId || vessel?.id}&vesselName=${vesselName || vessel?.name}`
+      })
+    }
   }
 
   const totalFuel = tanks.reduce((sum, t) => sum + t.currentLevel, 0)
@@ -406,6 +415,24 @@ const VesselDetailPage: React.FC = () => {
           )}
         </View>
       </View>
+
+      {user?.role === 'manager' && (
+        <View className={styles.section} onClick={handleTrackingClick}>
+          <View className={styles.sectionHeader}>
+            <Text className={styles.sectionTitle}>同步追踪</Text>
+            <Text className={styles.sectionAction}>
+              查看详情 ›
+            </Text>
+          </View>
+          <View style={{ padding: '20rpx 28rpx', flexDirection: 'row', alignItems: 'center', gap: '16rpx' }}>
+            <Text style={{ fontSize: '36rpx' }}>📡</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: '28rpx', color: '#263238', marginBottom: '6rpx' }}>同步记录明细</Text>
+              <Text style={{ fontSize: '24rpx', color: '#78909C' }}>查看每次同步的记录数、状态和失败详情</Text>
+            </View>
+          </View>
+        </View>
+      )}
 
       <View className={styles.syncInfo}>
         <View className={classnames(styles.syncIndicator, isOffline && styles.offline)} />

@@ -1,0 +1,335 @@
+@use '@/styles/variables.scss' as *;
+
+$color-pending: #FF9800;
+$color-syncing: #2196F3;
+$color-success: #4CAF50;
+$color-failed: #F44336;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.header {
+  background: $color-bg-header;
+  padding: $spacing-lg $page-padding $spacing-xl;
+  color: $color-text-white;
+
+  .title {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-xs;
+  }
+
+  .subtitle {
+    font-size: $font-size-sm;
+    opacity: 0.85;
+  }
+}
+
+.actionBar {
+  margin: -$spacing-lg $page-padding $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-card;
+  display: flex;
+  gap: $spacing-sm;
+
+  .btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-xs;
+    padding: $spacing-md;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    transition: all $transition-fast;
+
+    &.primary {
+      background: $color-primary;
+      color: $color-text-white;
+
+      &:active {
+        opacity: 0.8;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+
+    &.secondary {
+      background: $color-bg-hover;
+      color: $color-text-secondary;
+
+      &:active {
+        background: $color-divider;
+      }
+    }
+
+    .icon {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+.statSummary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-sm;
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+
+  .statItem {
+    background: $color-bg-card;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    text-align: center;
+    box-shadow: $shadow-card;
+
+    .statValue {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-xs;
+
+      &.pending { color: $color-pending; }
+      &.syncing { color: $color-syncing; }
+      &.success { color: $color-success; }
+      &.failed { color: $color-failed; }
+    }
+
+    .statLabel {
+      font-size: $font-size-xs;
+      color: $color-text-secondary;
+    }
+  }
+}
+
+.filterTabs {
+  display: flex;
+  gap: $spacing-sm;
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-md;
+
+  .filterTab {
+    flex: 1;
+    padding: $spacing-sm $spacing-md;
+    text-align: center;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    background: $color-bg-card;
+    transition: all $transition-fast;
+
+    &.active {
+      background: $color-primary;
+      color: $color-text-white;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+.queueList {
+  padding: 0 $page-padding $spacing-xl;
+
+  .queueCard {
+    background: $color-bg-card;
+    border-radius: $radius-lg;
+    padding: $spacing-lg;
+    margin-bottom: $spacing-md;
+    box-shadow: $shadow-card;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6rpx;
+    }
+
+    &.pending::before { background: $color-pending; }
+    &.syncing::before { background: $color-syncing; }
+    &.success::before { background: $color-success; }
+    &.failed::before { background: $color-failed; }
+
+    .cardHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: $spacing-md;
+
+      .operationInfo {
+        flex: 1;
+
+        .operationType {
+          font-size: $font-size-lg;
+          font-weight: $font-weight-semibold;
+          color: $color-text-primary;
+          margin-bottom: $spacing-xs;
+        }
+
+        .voyageInfo {
+          font-size: $font-size-sm;
+          color: $color-text-secondary;
+        }
+      }
+
+      .statusBadge {
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $radius-round;
+        font-size: $font-size-xs;
+        font-weight: $font-weight-medium;
+
+        &.pending {
+          background: rgba($color-pending, 0.1);
+          color: $color-pending;
+        }
+
+        &.syncing {
+          background: rgba($color-syncing, 0.1);
+          color: $color-syncing;
+        }
+
+        &.success {
+          background: rgba($color-success, 0.1);
+          color: $color-success;
+        }
+
+        &.failed {
+          background: rgba($color-failed, 0.1);
+          color: $color-failed;
+        }
+      }
+    }
+
+    .cardBody {
+      .infoRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $spacing-xs 0;
+
+        .label {
+          font-size: $font-size-sm;
+          color: $color-text-tertiary;
+        }
+
+        .value {
+          font-size: $font-size-sm;
+          color: $color-text-primary;
+        }
+
+        .retryBadge {
+          padding: 2px 8rpx;
+          background: rgba($color-warning, 0.1);
+          color: $color-warning;
+          border-radius: $radius-sm;
+          font-size: $font-size-xs;
+        }
+      }
+
+      .failedReason {
+        margin-top: $spacing-sm;
+        padding: $spacing-sm;
+        background: rgba($color-failed, 0.05);
+        border-radius: $radius-sm;
+        border-left: 3rpx solid $color-failed;
+
+        .reasonTitle {
+          font-size: $font-size-xs;
+          color: $color-failed;
+          font-weight: $font-weight-medium;
+          margin-bottom: $spacing-xs;
+        }
+
+        .reasonText {
+          font-size: $font-size-xs;
+          color: $color-text-secondary;
+          line-height: 1.5;
+        }
+      }
+    }
+
+    .cardFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: $spacing-md;
+      margin-top: $spacing-md;
+      border-top: 1rpx solid $color-divider;
+
+      .timeInfo {
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+      }
+
+      .retryBtn {
+        padding: $spacing-xs $spacing-md;
+        background: $color-primary;
+        color: $color-text-white;
+        border-radius: $radius-md;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+
+        &:active {
+          opacity: 0.8;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  .emptyState {
+    text-align: center;
+    padding: $spacing-xl * 2;
+
+    .icon {
+      font-size: 96rpx;
+      opacity: 0.3;
+      margin-bottom: $spacing-md;
+    }
+
+    .title {
+      font-size: $font-size-lg;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .subtitle {
+      font-size: $font-size-sm;
+      color: $color-text-tertiary;
+    }
+  }
+}
+
+.loadMore {
+  text-align: center;
+  padding: $spacing-lg;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.syncProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 6rpx;
+  background: rgba($color-primary, 0.2);
+
+  .progressBar {
+    height: 100%;
+    background: $color-primary;
+    transition: width $transition-fast;
+  }
+}

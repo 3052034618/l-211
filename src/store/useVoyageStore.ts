@@ -40,6 +40,10 @@ interface VoyageState {
   updateVoyage: (voyageId: string, updates: Partial<Voyage>) => void
   getVoyageById: (voyageId: string) => Voyage | undefined
   
+  // 记录查询
+  getRefuelRecordById: (recordId: string) => { record: RefuelRecord | undefined; voyage: Voyage | undefined }
+  getAnomalyRecordById: (anomalyId: string) => { record: AnomalyRecord | undefined; voyage: Voyage | undefined }
+  
   // 油舱管理
   addTankRecord: (tank: Tank) => void
   updateTankRecord: (tankId: string, updates: Partial<Tank>) => void
@@ -70,10 +74,17 @@ interface VoyageState {
   addToOfflineQueue: (type: OfflineOperationType, voyageId: string, data: any) => void
   removeFromOfflineQueue: (itemId: string) => void
   clearOfflineQueue: () => void
+  retryOfflineItem: (itemId: string) => Promise<void>
   
   // 数据同步
   syncOfflineData: () => Promise<void>
   processOfflineQueue: () => Promise<void>
+  
+  // 同步记录
+  syncRecords: SyncRecord[]
+  getSyncRecordsByVessel: (vesselId: string) => SyncRecord[]
+  addSyncRecord: (record: SyncRecord) => void
+  loadSyncRecords: () => Promise<void>
   
   // 导出功能
   exportDailyReport: (voyageId: string, date: string) => Promise<ExportResult>
@@ -96,6 +107,7 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
   offlineQueue: [],
   isSyncing: false,
   syncProgress: 0,
+  syncRecords: [],
 
   setUser: (user) => {
     set({ user })
@@ -192,6 +204,30 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
     const { voyageList, currentVoyage } = get()
     if (currentVoyage?.id === voyageId) return currentVoyage
     return voyageList.find(v => v.id === voyageId)
+  },
+
+  getRefuelRecordById: (recordId) => {
+    const { voyageList, currentVoyage } = get()
+    const allVoyages = currentVoyage ? [currentVoyage, ...voyageList] : voyageList
+    for (const voyage of allVoyages) {
+      const record = voyage.refuelRecords.find(r => r.id === recordId)
+      if (record) {
+        return { record, voyage }
+      }
+    }
+    return { record: undefined, voyage: undefined }
+  },
+
+  getAnomalyRecordById: (anomalyId) => {
+    const { voyageList, currentVoyage } = get()
+    const allVoyages = currentVoyage ? [currentVoyage, ...voyageList] : voyageList
+    for (const voyage of allVoyages) {
+      const record = voyage.anomalies.find(a => a.id === anomalyId)
+      if (record) {
+        return { record, voyage }
+      }
+    }
+    return { record: undefined, voyage: undefined }
   },
 
   addTankRecord: (tank) => {
@@ -469,11 +505,13 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
   },
 
   addToOfflineQueue: (type, voyageId, data) => {
-    const { offlineQueue } = get()
+    const { offlineQueue, getVoyageById } = get()
+    const voyage = getVoyageById(voyageId)
     const newItem: OfflineQueueItem = {
       id: `offline_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type,
       voyageId,
+      vesselName: voyage?.vesselName,
       data,
       createdAt: new Date().toISOString(),
       status: 'pending',
@@ -525,11 +563,31 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
   },
 
   processOfflineQueue: async () => {
-    const { offlineQueue } = get()
-    const total = offlineQueue.length
-    let completed = 0
+    const { offlineQueue, vessels, addSyncRecord } = get()
+    const pendingItems = offlineQueue.filter(item => item.status === 'pending' || item.status === 'failed')
     
-    for (const item of offlineQueue) {
+    if (pendingItems.length === 0) return
+    
+    const total = pendingItems.length
+    let completed = 0
+    let successCount = 0
+    let failedCount = 0
+    const failedRecords: Array<{ id: string; type: string; reason: string }> = []
+    const operationTypes = new Set<string>()
+    const syncStartedAt = new Date().toISOString()
+    
+    const vesselMap = new Map<string, { vesselId: string; vesselName: string }>()
+    pendingItems.forEach(item => {
+      if (item.vesselName) {
+        const vessel = vessels.find(v => v.name === item.vesselName)
+        if (vessel) {
+          vesselMap.set(item.vesselName, { vesselId: vessel.id, vesselName: vessel.name })
+        }
+      }
+    })
+
+    for (const item of pendingItems) {
+      const startTime = Date.now()
       try {
         set(state => ({ 
           offlineQueue: state.offlineQueue.map(q => 
@@ -537,16 +595,36 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
           )
         }))
         
-        await new Promise(resolve => setTimeout(resolve, 200))
+        operationTypes.add(item.type)
+        
+        await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 200))
         
         completed++
+        successCount++
         set({ syncProgress: Math.round((completed / total) * 100) })
         
-        get().removeFromOfflineQueue(item.id)
+        const syncDuration = Date.now() - startTime
+        set(state => ({
+          offlineQueue: state.offlineQueue.map(q =>
+            q.id === item.id 
+              ? { ...q, status: 'success', syncedAt: new Date().toISOString(), syncDuration } 
+              : q
+          )
+        }))
+        
+        setTimeout(() => {
+          get().removeFromOfflineQueue(item.id)
+        }, 2000)
         
         console.log('[VoyageStore] 离线操作同步成功', item.id)
       } catch (error) {
         console.error('[VoyageStore] 离线操作同步失败', item.id, error)
+        failedCount++
+        failedRecords.push({
+          id: item.id,
+          type: item.type,
+          reason: (error as Error).message
+        })
         set(state => ({
           offlineQueue: state.offlineQueue.map(q =>
             q.id === item.id 
@@ -555,6 +633,69 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
           )
         }))
       }
+    }
+    
+    const syncCompletedAt = new Date().toISOString()
+    const syncStatus: 'success' | 'partial' | 'failed' = 
+      failedCount === 0 ? 'success' : successCount > 0 ? 'partial' : 'failed'
+    
+    if (vesselMap.size > 0) {
+      vesselMap.forEach(({ vesselId, vesselName }) => {
+        addSyncRecord({
+          id: `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          vesselName,
+          vesselId,
+          syncStartedAt,
+          syncCompletedAt,
+          recordCount: total,
+          successCount,
+          failedCount,
+          operationTypes: Array.from(operationTypes),
+          status: syncStatus,
+          failedRecords: failedCount > 0 ? failedRecords : undefined
+        })
+      })
+    }
+    
+    set({ isSyncing: false, syncProgress: 100 })
+  },
+
+  retryOfflineItem: async (itemId) => {
+    const { offlineQueue, processOfflineQueue } = get()
+    const item = offlineQueue.find(q => q.id === itemId)
+    if (!item || item.status === 'syncing') return
+    
+    set(state => ({
+      offlineQueue: state.offlineQueue.map(q =>
+        q.id === itemId ? { ...q, status: 'pending', failedReason: undefined } : q
+      )
+    }))
+    
+    await processOfflineQueue()
+  },
+
+  getSyncRecordsByVessel: (vesselId) => {
+    const { syncRecords } = get()
+    return syncRecords
+      .filter(r => r.vesselId === vesselId)
+      .sort((a, b) => dayjs(b.syncStartedAt).valueOf() - dayjs(a.syncStartedAt).valueOf())
+  },
+
+  addSyncRecord: (record) => {
+    set(state => ({
+      syncRecords: [...state.syncRecords, record]
+    }))
+    saveSyncRecords(get().syncRecords)
+  },
+
+  loadSyncRecords: async () => {
+    try {
+      const records = await loadSyncRecords()
+      if (records) {
+        set({ syncRecords: records })
+      }
+    } catch (error) {
+      console.error('[VoyageStore] 加载同步记录失败', error)
     }
   },
 
@@ -699,25 +840,28 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
   loadData: async () => {
     set({ isLoading: true })
     try {
-      const [user, currentVoyage, voyageList, offlineQueue] = await Promise.all([
+      const [user, currentVoyage, voyageList, offlineQueue, syncRecords] = await Promise.all([
         getUser(),
         getCurrentVoyage(),
         getVoyageList(),
-        getOfflineQueue()
+        getOfflineQueue(),
+        loadSyncRecords()
       ])
       
       set({
         user: user as User | null,
         currentVoyage: currentVoyage as Voyage | null,
         voyageList: voyageList as Voyage[],
-        offlineQueue: offlineQueue as OfflineQueueItem[]
+        offlineQueue: offlineQueue as OfflineQueueItem[],
+        syncRecords: syncRecords as SyncRecord[]
       })
       
       console.log('[VoyageStore] 数据加载完成', { 
         hasUser: !!user, 
         hasCurrentVoyage: !!currentVoyage, 
         voyageCount: voyageList.length,
-        offlineQueueCount: offlineQueue.length
+        offlineQueueCount: offlineQueue.length,
+        syncRecordsCount: syncRecords.length
       })
     } catch (error) {
       console.error('[VoyageStore] 数据加载失败', error)

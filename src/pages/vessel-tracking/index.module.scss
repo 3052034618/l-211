@@ -1,0 +1,408 @@
+.page {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding-bottom: 32rpx;
+}
+
+.vesselHeader {
+  background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+  padding: 32rpx;
+  color: #fff;
+}
+
+.vesselInfo {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.vesselIcon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+
+.vesselDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.vesselName {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.vesselType {
+  font-size: 26rpx;
+  opacity: 0.85;
+}
+
+.vesselMeta {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 8rpx;
+}
+
+.vesselMetaItem {
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.statsSection {
+  margin: 24rpx 32rpx 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.statCard {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.statCard:nth-child(1),
+.statCard:nth-child(4) {
+  grid-column: span 1;
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.statIcon {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  background: #E3F2FD;
+}
+
+.statIcon.success {
+  background: #E8F5E9;
+}
+
+.statIcon.failed {
+  background: #FFEBEE;
+}
+
+.statIcon.avg {
+  background: #FFF3E0;
+}
+
+.statLabel {
+  font-size: 24rpx;
+  color: #78909C;
+}
+
+.statValue {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #263238;
+  line-height: 1.2;
+}
+
+.statValue.success {
+  color: #4CAF50;
+}
+
+.statValue.failed {
+  color: #F44336;
+}
+
+.statValue.avg {
+  color: #FF9800;
+}
+
+.statSubLabel {
+  font-size: 22rpx;
+  color: #90A4AE;
+  margin-top: 4rpx;
+}
+
+.filterSection {
+  margin: 24rpx 32rpx 0;
+  padding: 16rpx 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  display: flex;
+  gap: 16rpx;
+  overflow-x: auto;
+}
+
+.filterItem {
+  flex-shrink: 0;
+  padding: 12rpx 28rpx;
+  font-size: 26rpx;
+  color: #78909C;
+  border-radius: 24rpx;
+  background: #F5F7FA;
+  transition: all 0.2s ease;
+
+  &.active {
+    color: #fff;
+    background: #1E88E5;
+    font-weight: 500;
+  }
+
+  &.active.success {
+    background: #4CAF50;
+  }
+
+  &.active.partial {
+    background: #FF9800;
+  }
+
+  &.active.failed {
+    background: #F44336;
+  }
+}
+
+.recordsSection {
+  margin: 24rpx 32rpx 0;
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx;
+  border-bottom: 1rpx solid #F0F2F5;
+}
+
+.sectionTitle {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #263238;
+}
+
+.sectionCount {
+  font-size: 26rpx;
+  color: #78909C;
+}
+
+.recordList {
+  padding: 0 8rpx;
+}
+
+.recordItem {
+  padding: 24rpx 20rpx;
+  border-bottom: 1rpx solid #F5F7FA;
+  transition: background 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: #F8FAFB;
+  }
+}
+
+.recordHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.recordTime {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #263238;
+}
+
+.recordStatus {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  font-weight: 500;
+
+  &.success {
+    background: #E8F5E9;
+    color: #4CAF50;
+  }
+
+  &.partial {
+    background: #FFF3E0;
+    color: #FF9800;
+  }
+
+  &.failed {
+    background: #FFEBEE;
+    color: #F44336;
+  }
+}
+
+.recordMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: #546E7A;
+}
+
+.metaLabel {
+  color: #90A4AE;
+}
+
+.metaValue {
+  font-weight: 500;
+}
+
+.metaValue.success {
+  color: #4CAF50;
+}
+
+.metaValue.failed {
+  color: #F44336;
+}
+
+.operationTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.operationTag {
+  padding: 6rpx 14rpx;
+  font-size: 22rpx;
+  color: #1E88E5;
+  background: #E3F2FD;
+  border-radius: 8rpx;
+}
+
+.expandBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  padding: 8rpx 0;
+  font-size: 24rpx;
+  color: #78909C;
+  transition: color 0.2s ease;
+
+  &.active {
+    color: #1E88E5;
+  }
+}
+
+.expandIcon {
+  font-size: 20rpx;
+  transition: transform 0.2s ease;
+
+  .active & {
+    transform: rotate(180deg);
+  }
+}
+
+.failedDetails {
+  margin-top: 16rpx;
+  padding: 20rpx;
+  background: #FFF8F8;
+  border-radius: 12rpx;
+  border-left: 4rpx solid #F44336;
+}
+
+.failedTitle {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #F44336;
+  margin-bottom: 12rpx;
+}
+
+.failedItem {
+  padding: 12rpx 0;
+  border-bottom: 1rpx dashed #FFCDD2;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.failedItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6rpx;
+}
+
+.failedType {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #263238;
+}
+
+.failedReason {
+  font-size: 22rpx;
+  color: #F44336;
+  line-height: 1.5;
+}
+
+.emptyState {
+  padding: 80rpx 28rpx;
+  text-align: center;
+  color: #90A4AE;
+}
+
+.emptyIcon {
+  font-size: 72rpx;
+  margin-bottom: 20rpx;
+}
+
+.emptyText {
+  font-size: 28rpx;
+  margin-bottom: 8rpx;
+}
+
+.emptySubText {
+  font-size: 24rpx;
+  color: #B0BEC5;
+}
+
+.loadingState {
+  padding: 60rpx 28rpx;
+  text-align: center;
+}
+
+.loadingText {
+  font-size: 26rpx;
+  color: #78909C;
+  margin-top: 16rpx;
+}
+
+.divider {
+  width: 1rpx;
+  height: 24rpx;
+  background: #ECEFF1;
+}

@@ -4,30 +4,33 @@ import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import { mockAnomalyRecords, mockUser } from '@/data/mockData'
-import type { AnomalyRecord } from '@/types'
+import type { AnomalyRecord, Voyage } from '@/types'
 import dayjs from 'dayjs'
 
 const AnomalyDetailPage: React.FC = () => {
   const router = useRouter()
-  const { currentVoyage, resolveAnomaly, user, setUser } = useVoyageStore()
+  const { getAnomalyRecordById, resolveAnomaly, user, setUser, loadData } = useVoyageStore()
   const [anomaly, setAnomaly] = useState<AnomalyRecord | null>(null)
+  const [voyage, setVoyage] = useState<Voyage | null>(null)
   const [resolution, setResolution] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useDidShow(() => {
+  useDidShow(async () => {
+    await loadData()
     if (!user) setUser(mockUser)
 
     const anomalyId = router.params.id
-    if (anomalyId && currentVoyage) {
-      const found = currentVoyage.anomalies.find(a => a.id === anomalyId)
-      if (found) {
-        setAnomaly(found)
+    if (anomalyId) {
+      const { record: foundAnomaly, voyage: foundVoyage } = getAnomalyRecordById(anomalyId)
+      if (foundAnomaly) {
+        setAnomaly(foundAnomaly)
+        setVoyage(foundVoyage || null)
       } else {
         const mockFound = mockAnomalyRecords.find(a => a.id === anomalyId)
         if (mockFound) setAnomaly(mockFound)
       }
     }
-    if (!anomaly) {
+    if (!anomaly && !router.params.id) {
       setAnomaly(mockAnomalyRecords[1])
     }
   })
@@ -209,7 +212,7 @@ const AnomalyDetailPage: React.FC = () => {
         </View>
         <View className={styles.infoRow}>
           <Text className={styles.label}>所属航次</Text>
-          <Text className={styles.value}>{currentVoyage?.fromPort || '--'} → {currentVoyage?.toPort || '--'}</Text>
+          <Text className={styles.value}>{voyage ? `${voyage.fromPort} → ${voyage.toPort}` : '--'}</Text>
         </View>
       </View>
 
