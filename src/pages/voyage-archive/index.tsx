@@ -268,7 +268,9 @@ const VoyageArchivePage: React.FC = () => {
   const handleNodeClick = (node: TimelineNode) => {
     switch (node.type) {
       case 'tank':
-        Taro.switchTab({ url: '/pages/tank/index' })
+        Taro.navigateTo({
+          url: `/pages/tank-snapshot/index?voyageId=${voyageId}`
+        })
         break
       case 'refuel':
         Taro.navigateTo({

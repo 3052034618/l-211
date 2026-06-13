@@ -3,7 +3,7 @@ import type {
   Voyage, Tank, RefuelRecord, EngineRecord, AnomalyRecord, 
   DailyConsumption, HandoverReport, User,
   Vessel, FleetSummary, OfflineQueueItem,
-  OfflineOperationType, ExportResult, ExportType, SyncRecord
+  OfflineOperationType, ExportResult, ExportType, SyncRecord, OperationTypeStat
 } from '@/types'
 import { 
   getCurrentVoyage, getVoyageList, saveCurrentVoyage, saveVoyageList, 
@@ -63,8 +63,8 @@ interface VoyageState {
   addDailyConsumption: (consumption: DailyConsumption) => void
   
   // 交接单
-  generateHandoverReport: () => HandoverReport | null
-  confirmHandover: (confirmedBy: string) => void
+  generateHandoverReport: (voyageId?: string) => HandoverReport | null
+  confirmHandover: (confirmedBy: string, voyageId?: string) => void
   
   // 船队管理
   loadFleetData: () => Promise<void>
@@ -386,64 +386,68 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
     console.log('[VoyageStore] 添加每日油耗成功', consumption.id)
   },
 
-  generateHandoverReport: () => {
-    const { currentVoyage, user } = get()
-    if (!currentVoyage || !user) return null
+  generateHandoverReport: (voyageId?: string) => {
+    const { currentVoyage, user, getVoyageById } = get()
+    const targetVoyage = voyageId ? getVoyageById(voyageId) : currentVoyage
+    if (!targetVoyage || !user) return null
 
-    const totalRefueled = currentVoyage.refuelRecords.reduce((sum, r) => sum + r.quantity, 0)
-    const totalConsumed = currentVoyage.dailyConsumptions.reduce((sum, c) => sum + c.consumed, 0)
-    const avgDaily = currentVoyage.dailyConsumptions.length > 0
-      ? totalConsumed / currentVoyage.dailyConsumptions.length
+    const totalRefueled = targetVoyage.refuelRecords.reduce((sum, r) => sum + r.quantity, 0)
+    const totalConsumed = targetVoyage.dailyConsumptions.reduce((sum, c) => sum + c.consumed, 0)
+    const avgDaily = targetVoyage.dailyConsumptions.length > 0
+      ? totalConsumed / targetVoyage.dailyConsumptions.length
       : 0
 
     const report: HandoverReport = {
       id: `handover_${Date.now()}`,
-      voyageId: currentVoyage.id,
-      vesselName: currentVoyage.vesselName,
-      fromPort: currentVoyage.fromPort,
-      toPort: currentVoyage.toPort,
-      departureDate: currentVoyage.departureDate,
-      arrivalDate: currentVoyage.arrivalDate || new Date().toISOString(),
+      voyageId: targetVoyage.id,
+      vesselName: targetVoyage.vesselName,
+      fromPort: targetVoyage.fromPort,
+      toPort: targetVoyage.toPort,
+      departureDate: targetVoyage.departureDate,
+      arrivalDate: targetVoyage.arrivalDate || new Date().toISOString(),
       totalFuelConsumed: Number(totalConsumed.toFixed(2)),
       totalRefueled: Number(totalRefueled.toFixed(2)),
       avgDailyConsumption: Number(avgDaily.toFixed(2)),
-      tankLevels: currentVoyage.tanks.map(t => ({
+      tankLevels: targetVoyage.tanks.map(t => ({
         tankId: t.id,
         tankName: t.name,
         level: t.currentLevel,
         fuelType: t.fuelType
       })),
-      anomalies: currentVoyage.anomalies,
+      anomalies: targetVoyage.anomalies,
       preparedBy: user.name,
       status: 'draft'
     }
 
-    get().updateVoyage(currentVoyage.id, {
-      handoverReport: report
-    })
+    if (!voyageId && targetVoyage === currentVoyage) {
+      get().updateVoyage(targetVoyage.id, {
+        handoverReport: report
+      })
+    }
 
     console.log('[VoyageStore] 生成交接单成功', report.id)
     return report
   },
 
-  confirmHandover: (confirmedBy) => {
-    const { currentVoyage, isOffline } = get()
-    if (!currentVoyage?.handoverReport) return
+  confirmHandover: (confirmedBy, voyageId?: string) => {
+    const { currentVoyage, isOffline, getVoyageById } = get()
+    const targetVoyage = voyageId ? getVoyageById(voyageId) : currentVoyage
+    if (!targetVoyage?.handoverReport) return
 
     const updatedReport: HandoverReport = {
-      ...currentVoyage.handoverReport,
+      ...targetVoyage.handoverReport,
       confirmedBy,
       confirmedAt: new Date().toISOString(),
       status: 'confirmed'
     }
 
-    get().updateVoyage(currentVoyage.id, {
+    get().updateVoyage(targetVoyage.id, {
       handoverReport: updatedReport,
       status: 'completed'
     })
     
     if (isOffline) {
-      get().addToOfflineQueue('confirm_handover', currentVoyage.id, { confirmedBy })
+      get().addToOfflineQueue('confirm_handover', targetVoyage.id, { confirmedBy })
     }
     
     console.log('[VoyageStore] 交接单已确认')
@@ -573,26 +577,61 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
     
     if (pendingItems.length === 0) return
     
+    set({ isSyncing: true, syncProgress: 0 })
+    
     const total = pendingItems.length
     let completed = 0
-    let successCount = 0
-    let failedCount = 0
-    const failedRecords: Array<{ id: string; type: string; reason: string }> = []
-    const operationTypes = new Set<string>()
     const syncStartedAt = new Date().toISOString()
     
-    const vesselMap = new Map<string, { vesselId: string; vesselName: string }>()
+    const perVoyageStats = new Map<string, {
+      vesselName: string
+      vesselId: string
+      voyageId: string
+      successCount: number
+      failedCount: number
+      operationTypes: Set<string>
+      perTypeStats: Map<string, { total: number; success: number; failed: number; retried: number }>
+      failedRecords: Array<{ id: string; type: string; reason: string; isRetried?: boolean }>
+      syncStartedAt: string
+    }>()
+    
     pendingItems.forEach(item => {
-      if (item.vesselName) {
-        const vessel = vessels.find(v => v.name === item.vesselName)
-        if (vessel) {
-          vesselMap.set(item.vesselName, { vesselId: vessel.id, vesselName: vessel.name })
+      const key = item.voyageId || 'default'
+      if (!perVoyageStats.has(key)) {
+        let vesselId = ''
+        if (item.vesselName) {
+          const vessel = vessels.find(v => v.name === item.vesselName)
+          vesselId = vessel?.id || ''
         }
+        perVoyageStats.set(key, {
+          vesselName: item.vesselName || '',
+          vesselId,
+          voyageId: item.voyageId,
+          successCount: 0,
+          failedCount: 0,
+          operationTypes: new Set<string>(),
+          perTypeStats: new Map(),
+          failedRecords: [],
+          syncStartedAt
+        })
       }
+      
+      const stats = perVoyageStats.get(key)!
+      stats.operationTypes.add(item.type)
+      
+      if (!stats.perTypeStats.has(item.type)) {
+        stats.perTypeStats.set(item.type, { total: 0, success: 0, failed: 0, retried: 0 })
+      }
+      const typeStat = stats.perTypeStats.get(item.type)!
+      typeStat.total++
     })
 
     for (const item of pendingItems) {
       const startTime = Date.now()
+      const isRetried = item.retryCount > 0
+      const voyageKey = item.voyageId || 'default'
+      const stats = perVoyageStats.get(voyageKey)!
+      
       try {
         set(state => ({ 
           offlineQueue: state.offlineQueue.map(q => 
@@ -600,12 +639,9 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
           )
         }))
         
-        operationTypes.add(item.type)
-        
-        await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 200))
+        await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 200))
         
         completed++
-        successCount++
         set({ syncProgress: Math.round((completed / total) * 100) })
         
         const syncDuration = Date.now() - startTime
@@ -617,18 +653,32 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
           )
         }))
         
+        stats.successCount++
+        const typeStat = stats.perTypeStats.get(item.type)!
+        typeStat.success++
+        if (isRetried) {
+          typeStat.retried++
+        }
+        
         setTimeout(() => {
           get().removeFromOfflineQueue(item.id)
         }, 2000)
         
-        console.log('[VoyageStore] 离线操作同步成功', item.id)
+        console.log('[VoyageStore] 离线操作同步成功', item.id, isRetried ? '(重传)' : '')
       } catch (error) {
         console.error('[VoyageStore] 离线操作同步失败', item.id, error)
-        failedCount++
-        failedRecords.push({
+        stats.failedCount++
+        const typeStat = stats.perTypeStats.get(item.type)!
+        typeStat.failed++
+        if (isRetried) {
+          typeStat.retried++
+        }
+        
+        stats.failedRecords.push({
           id: item.id,
           type: item.type,
-          reason: (error as Error).message
+          reason: (error as Error).message,
+          isRetried
         })
         set(state => ({
           offlineQueue: state.offlineQueue.map(q =>
@@ -641,26 +691,33 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
     }
     
     const syncCompletedAt = new Date().toISOString()
-    const syncStatus: 'success' | 'partial' | 'failed' = 
-      failedCount === 0 ? 'success' : successCount > 0 ? 'partial' : 'failed'
     
-    if (vesselMap.size > 0) {
-      vesselMap.forEach(({ vesselId, vesselName }) => {
-        addSyncRecord({
-          id: `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          vesselName,
-          vesselId,
-          syncStartedAt,
-          syncCompletedAt,
-          recordCount: total,
-          successCount,
-          failedCount,
-          operationTypes: Array.from(operationTypes),
-          status: syncStatus,
-          failedRecords: failedCount > 0 ? failedRecords : undefined
-        })
+    perVoyageStats.forEach((stats, voyageId) => {
+      const totalCount = stats.successCount + stats.failedCount
+      const syncStatus: 'success' | 'partial' | 'failed' = 
+        stats.failedCount === 0 ? 'success' : stats.successCount > 0 ? 'partial' : 'failed'
+      
+      const perTypeStatsArray: OperationTypeStat[] = Array.from(stats.perTypeStats.entries()).map(([type, stat]) => ({
+        type,
+        ...stat
+      }))
+      
+      addSyncRecord({
+        id: `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        vesselName: stats.vesselName,
+        vesselId: stats.vesselId,
+        voyageId: voyageId === 'default' ? undefined : voyageId,
+        syncStartedAt: stats.syncStartedAt,
+        syncCompletedAt,
+        recordCount: totalCount,
+        successCount: stats.successCount,
+        failedCount: stats.failedCount,
+        operationTypes: Array.from(stats.operationTypes),
+        perTypeStats: perTypeStatsArray,
+        status: syncStatus,
+        failedRecords: stats.failedRecords.length > 0 ? stats.failedRecords : undefined
       })
-    }
+    })
     
     set({ isSyncing: false, syncProgress: 100 })
   },

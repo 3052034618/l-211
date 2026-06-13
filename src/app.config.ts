@@ -16,7 +16,8 @@ export default defineAppConfig({
     'pages/history/index',
     'pages/refuel-detail/index',
     'pages/anomaly-detail/index',
-    'pages/handover-preview/index'
+    'pages/handover-preview/index',
+    'pages/tank-snapshot/index'
   ],
   window: {
     backgroundTextStyle: 'light',

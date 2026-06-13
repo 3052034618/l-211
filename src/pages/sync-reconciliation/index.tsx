@@ -29,6 +29,8 @@ interface TypeStats {
   total: number
   success: number
   failed: number
+  retried: number
+  isEstimated?: boolean
 }
 
 const SyncReconciliationPage: React.FC = () => {
@@ -120,10 +122,7 @@ const SyncReconciliationPage: React.FC = () => {
     }
 
     if (selectedVoyageId) {
-      const voyage = getVoyageById(selectedVoyageId)
-      if (voyage) {
-        records = records.filter(r => r.vesselName === voyage.vesselName)
-      }
+      records = records.filter(r => r.voyageId === selectedVoyageId)
     }
 
     if (startDate) {
@@ -154,6 +153,13 @@ const SyncReconciliationPage: React.FC = () => {
   }, [filteredRecords])
 
   const getVoyageInfo = (record: SyncRecord): string => {
+    if (record.voyageId) {
+      const voyage = getVoyageById(record.voyageId)
+      if (voyage) {
+        return `${voyage.fromPort} → ${voyage.toPort}`
+      }
+    }
+
     const vesselVoyages = voyageList.filter(v => v.vesselName === record.vesselName)
     if (vesselVoyages.length === 0) return '暂无航次'
 
@@ -168,10 +174,21 @@ const SyncReconciliationPage: React.FC = () => {
   }
 
   const getTypeStats = (record: SyncRecord): TypeStats[] => {
-    const typeCount = new Map<string, { total: number; success: number; failed: number }>()
+    if (record.perTypeStats && record.perTypeStats.length > 0) {
+      return record.perTypeStats.map(stat => ({
+        type: stat.type,
+        typeName: OPERATION_TYPE_MAP[stat.type] || stat.type,
+        total: stat.total,
+        success: stat.success,
+        failed: stat.failed,
+        retried: stat.retried
+      }))
+    }
+
+    const typeCount = new Map<string, { total: number; success: number; failed: number; retried: number }>()
 
     record.operationTypes.forEach(type => {
-      typeCount.set(type, { total: 0, success: 0, failed: 0 })
+      typeCount.set(type, { total: 0, success: 0, failed: 0, retried: 0 })
     })
 
     const successPerType = Math.floor(record.successCount / record.operationTypes.length)
@@ -198,8 +215,16 @@ const SyncReconciliationPage: React.FC = () => {
         const stats = typeCount.get(failed.type)
         if (stats) {
           stats.failed = Math.max(stats.failed, 1)
+          if (failed.isRetried) {
+            stats.retried += 1
+          }
         } else {
-          typeCount.set(failed.type, { total: 1, success: 0, failed: 1 })
+          typeCount.set(failed.type, {
+            total: 1,
+            success: 0,
+            failed: 1,
+            retried: failed.isRetried ? 1 : 0
+          })
         }
       })
     }
@@ -207,7 +232,8 @@ const SyncReconciliationPage: React.FC = () => {
     return Array.from(typeCount.entries()).map(([type, stats]) => ({
       type,
       typeName: OPERATION_TYPE_MAP[type] || type,
-      ...stats
+      ...stats,
+      isEstimated: true
     }))
   }
 
@@ -441,6 +467,17 @@ const SyncReconciliationPage: React.FC = () => {
                         </View>
                       </View>
 
+                      {record.operationTypes.includes('confirm_handover') && (
+                        <View className={styles.detailSection}>
+                          <Text className={styles.sectionTitle}>交接状态</Text>
+                          <View className={styles.handoverStatus}>
+                            <Text className={styles.handoverText}>
+                              该批次包含交接确认操作，交接单最终状态：已确认
+                            </Text>
+                          </View>
+                        </View>
+                      )}
+
                       <View className={styles.detailSection}>
                         <Text className={styles.sectionTitle}>各类型记录详情</Text>
                         <View className={styles.typeDetailList}>
@@ -451,6 +488,11 @@ const SyncReconciliationPage: React.FC = () => {
                                 <Text className={`${styles.count} ${styles.success}`}>
                                   成功 {typeStat.success}
                                 </Text>
+                                {typeStat.retried > 0 && (
+                                  <Text className={`${styles.count} ${styles.success}`}>
+                                    重传成功 {typeStat.retried}
+                                  </Text>
+                                )}
                                 <Text className={`${styles.count} ${styles.failed}`}>
                                   失败 {typeStat.failed}
                                 </Text>
@@ -469,6 +511,9 @@ const SyncReconciliationPage: React.FC = () => {
                                 <View className={styles.failedHeader}>
                                   <Text className={styles.failedType}>
                                     {OPERATION_TYPE_MAP[failed.type] || failed.type}
+                                    {failed.isRetried && (
+                                      <Text className={styles.retryBadge}> 重传仍失败</Text>
+                                    )}
                                   </Text>
                                   <Text className={styles.recordId}>{failed.id.slice(-8)}</Text>
                                 </View>

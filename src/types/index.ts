@@ -221,22 +221,34 @@ export interface OfflineQueueItem {
   syncDuration?: number
 }
 
+// 每类操作的同步统计
+export interface OperationTypeStat {
+  type: string
+  total: number
+  success: number
+  failed: number
+  retried: number
+}
+
 // 同步记录
 export interface SyncRecord {
   id: string
   vesselName: string
   vesselId: string
+  voyageId?: string
   syncStartedAt: string
   syncCompletedAt: string
   recordCount: number
   successCount: number
   failedCount: number
   operationTypes: string[]
+  perTypeStats: OperationTypeStat[]
   status: 'success' | 'partial' | 'failed'
   failedRecords?: Array<{
     id: string
     type: string
     reason: string
+    isRetried?: boolean
   }>
 }
 

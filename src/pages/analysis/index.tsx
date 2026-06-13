@@ -91,7 +91,7 @@ const AnalysisPage: React.FC = () => {
       return
     }
 
-    const avgConsumption = stats.avgDaily || 12
+    const avgConsumption = stats.avgDaily
     const consumption = Number(fuelConsumption)
     const anomalyCheck = checkConsumptionAnomaly(consumption, avgConsumption)
 
@@ -144,7 +144,8 @@ const AnalysisPage: React.FC = () => {
     }
 
     const lastConsumption = dailyConsumptions[dailyConsumptions.length - 1]
-    const startLevel = lastConsumption?.endLevel || 380
+    const totalFuelLevel = currentVoyage?.currentFuelLevel ?? currentVoyage?.tanks.reduce((sum, t) => sum + t.currentLevel, 0) ?? 0
+    const startLevel = lastConsumption?.endLevel ?? totalFuelLevel
     const refueled = 0
     const endLevel = startLevel - Number(fuelConsumption) + refueled
 

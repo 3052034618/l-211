@@ -1,0 +1,297 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.voyageHeader {
+  background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
+  margin: $spacing-lg $page-padding;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  color: $color-text-white;
+  box-shadow: $shadow-card;
+
+  .voyageRoute {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-md;
+
+    .routeArrow {
+      opacity: 0.8;
+    }
+  }
+
+  .vesselName {
+    font-size: $font-size-md;
+    opacity: 0.9;
+    margin-bottom: $spacing-md;
+  }
+
+  .statusBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-round;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    background: rgba(255, 255, 255, 0.2);
+
+    &.active {
+      background: rgba(38, 166, 154, 0.8);
+    }
+
+    &.completed {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    &.draft {
+      background: rgba(255, 152, 0, 0.8);
+    }
+  }
+}
+
+.summarySection {
+  margin: 0 $page-padding $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .summaryTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-lg;
+  }
+
+  .summaryStats {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+
+  .summaryItem {
+    flex: 1;
+    text-align: center;
+
+    .summaryValue {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $color-text-primary;
+      line-height: 1.2;
+    }
+
+    .summaryLabel {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-top: $spacing-xs;
+    }
+  }
+
+  .summaryDivider {
+    width: 1rpx;
+    height: 80rpx;
+    background: $color-divider;
+    align-self: center;
+  }
+
+  .progressSection {
+    .progressLabel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-sm;
+
+      .label {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+      }
+
+      .value {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-semibold;
+        color: $color-text-primary;
+      }
+    }
+
+    .progressBar {
+      width: 100%;
+      height: 16rpx;
+      background: $color-bg-hover;
+      border-radius: $radius-round;
+      overflow: hidden;
+
+      .progressFill {
+        height: 100%;
+        border-radius: $radius-round;
+        transition: width $transition-base;
+      }
+    }
+  }
+}
+
+.tanksSection {
+  margin: 0 $page-padding;
+
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+
+    .sectionTitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+    }
+
+    .tankCount {
+      font-size: $font-size-sm;
+      color: $color-text-tertiary;
+    }
+  }
+
+  .tankList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .tankCard {
+    background: $color-bg-card;
+    border-radius: $radius-lg;
+    padding: $spacing-lg;
+    box-shadow: $shadow-card;
+
+    .tankHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-md;
+
+      .tankName {
+        font-size: $font-size-md;
+        font-weight: $font-weight-semibold;
+        color: $color-text-primary;
+      }
+
+      .fuelTypeBadge {
+        font-size: $font-size-xs;
+        color: $color-primary;
+        background: rgba(30, 136, 229, 0.1);
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $radius-round;
+      }
+    }
+
+    .tankProgress {
+      width: 100%;
+      height: 20rpx;
+      background: $color-bg-hover;
+      border-radius: $radius-round;
+      overflow: hidden;
+      margin-bottom: $spacing-sm;
+
+      .progressFill {
+        height: 100%;
+        border-radius: $radius-round;
+        transition: width $transition-base;
+
+        &.high {
+          background: #4CAF50;
+        }
+
+        &.medium {
+          background: #FF9800;
+        }
+
+        &.low {
+          background: #F44336;
+        }
+      }
+    }
+
+    .tankFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .tankLevel {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+
+        .levelValue {
+          font-size: $font-size-md;
+          font-weight: $font-weight-semibold;
+          color: $color-text-primary;
+        }
+      }
+
+      .levelPercentage {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-semibold;
+
+        &.high {
+          color: #4CAF50;
+        }
+
+        &.medium {
+          color: #FF9800;
+        }
+
+        &.low {
+          color: #F44336;
+        }
+      }
+    }
+
+    .lastUpdate {
+      margin-top: $spacing-sm;
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xxl * 2 $page-padding;
+  text-align: center;
+
+  .emptyIcon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+    opacity: 0.5;
+  }
+
+  .emptyTitle {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-sm;
+  }
+
+  .emptyDesc {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+  }
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}

@@ -20,9 +20,10 @@ const HandoverPreviewPage: React.FC = () => {
 
     const voyageId = router.params.id
     let targetVoyage: Voyage | null | undefined = currentVoyage
+    const isHistoricalVoyage = !!voyageId
     
     if (voyageId) {
-      targetVoyage = getVoyageById(voyageId) || currentVoyage
+      targetVoyage = getVoyageById(voyageId)
     }
     
     setVoyage(targetVoyage || null)
@@ -34,13 +35,15 @@ const HandoverPreviewPage: React.FC = () => {
 
     if (targetVoyage.handoverReport) {
       setReport(targetVoyage.handoverReport)
-    } else {
+    } else if (!isHistoricalVoyage) {
       const generated = generateHandoverReport()
       if (generated) {
         setReport(generated)
       } else {
         setReport(null)
       }
+    } else {
+      setReport(null)
     }
   })
 
