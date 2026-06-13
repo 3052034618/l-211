@@ -5,7 +5,7 @@ import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import RefuelItem from '@/components/RefuelItem'
 import FormField from '@/components/FormField'
-import { mockRefuelRecords, portOptions, fuelTypeOptions } from '@/data/mockData'
+import { portOptions, fuelTypeOptions } from '@/data/mockData'
 import type { RefuelRecord } from '@/types'
 import { formatFuelAmount } from '@/utils/fuelCalculator'
 import dayjs from 'dayjs'
@@ -53,7 +53,7 @@ const RefuelPage: React.FC = () => {
     }
   }, [syncData])
 
-  const records = currentVoyage?.refuelRecords.length ? currentVoyage.refuelRecords : mockRefuelRecords
+  const records = currentVoyage?.refuelRecords || []
 
   const portSummaries = useMemo<PortSummary[]>(() => {
     const portMap = new Map<string, PortSummary>()

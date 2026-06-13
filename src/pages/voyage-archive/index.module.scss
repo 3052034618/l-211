@@ -1,0 +1,423 @@
+@use '@/styles/variables.scss' as *;
+
+$color-primary: #1E88E5;
+$color-primary-dark: #1976D2;
+
+$color-tank: #4CAF50;
+$color-refuel: #FF9800;
+$color-engine: #9C27B0;
+$color-consumption: #2196F3;
+$color-anomaly: #F44336;
+$color-anomaly-resolved: #8BC34A;
+$color-handover: #00BCD4;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.headerCard {
+  margin: $spacing-lg $page-padding;
+  padding: $spacing-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  color: $color-text-white;
+}
+
+.route {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.routePort {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.routeArrow {
+  font-size: $font-size-lg;
+  opacity: 0.8;
+}
+
+.vesselInfo {
+  font-size: $font-size-md;
+  opacity: 0.9;
+  margin-bottom: $spacing-sm;
+}
+
+.dateInfo {
+  font-size: $font-size-sm;
+  opacity: 0.8;
+  margin-bottom: $spacing-md;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.filterSection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+}
+
+.filterTabs {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  padding: $spacing-sm $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+.timelineSection {
+  padding: 0 $page-padding;
+}
+
+.timeline {
+  position: relative;
+  padding-left: $spacing-xl;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 16rpx;
+  top: 0;
+  bottom: 0;
+  width: 4rpx;
+  background: linear-gradient(180deg, $color-primary 0%, $color-divider 100%);
+  border-radius: 2rpx;
+}
+
+.timelineItem {
+  position: relative;
+  margin-bottom: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.timelineDot {
+  position: absolute;
+  left: -48rpx;
+  top: $spacing-lg;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: $radius-round;
+  border: 4rpx solid $color-bg-card;
+  box-shadow: 0 0 0 4rpx currentColor;
+
+  &.tank {
+    background: $color-tank;
+    color: $color-tank;
+  }
+
+  &.refuel {
+    background: $color-refuel;
+    color: $color-refuel;
+  }
+
+  &.engine {
+    background: $color-engine;
+    color: $color-engine;
+  }
+
+  &.consumption {
+    background: $color-consumption;
+    color: $color-consumption;
+  }
+
+  &.anomaly {
+    background: $color-anomaly;
+    color: $color-anomaly;
+  }
+
+  &.anomalyResolved {
+    background: $color-anomaly-resolved;
+    color: $color-anomaly-resolved;
+  }
+
+  &.handover {
+    background: $color-handover;
+    color: $color-handover;
+  }
+}
+
+.timelineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+}
+
+.timelineIcon {
+  font-size: $font-size-xl;
+  line-height: 1;
+}
+
+.timelineTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.timelineContent {
+  margin-bottom: $spacing-md;
+}
+
+.timelineTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.timelineDesc {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.timelineData {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.dataTag {
+  padding: $spacing-xs $spacing-sm;
+  background: $color-bg-hover;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.dataValue {
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-left: $spacing-xs;
+}
+
+.timelineFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.operator {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.viewDetail {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xxl $page-padding;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-lg;
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: $font-size-lg;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.emptyDesc {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.typeEmptyList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.typeEmptyItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+}
+
+.typeEmptyIcon {
+  font-size: 48rpx;
+  width: 80rpx;
+  text-align: center;
+}
+
+.typeEmptyText {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $page-padding;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 600rpx;
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+}
+
+.modalTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.modalClose {
+  font-size: 48rpx;
+  color: $color-text-tertiary;
+  line-height: 1;
+}
+
+.modalBody {
+  margin-bottom: $spacing-xl;
+}
+
+.detailSection {
+  margin-bottom: $spacing-lg;
+}
+
+.detailLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}
+
+.detailValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: $spacing-md 0;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.modalFooter {
+  padding-top: $spacing-lg;
+}
+
+.confirmBtn {
+  width: 100%;
+  height: $button-height-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: $color-text-white;
+  border: none;
+  border-radius: $radius-button;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionCount {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.loadingState {
+  text-align: center;
+  padding: $spacing-xxl;
+  color: $color-text-tertiary;
+}
+
+.sortToggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  background: $color-bg-card;
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.sortIcon {
+  font-size: $font-size-md;
+}

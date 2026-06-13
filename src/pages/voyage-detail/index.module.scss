@@ -428,6 +428,47 @@
   }
 }
 
+.archiveEntry {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+}
+
+.archiveIcon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-md;
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+.archiveInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.archiveTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.archiveDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.archiveArrow {
+  font-size: 36rpx;
+  color: $color-text-tertiary;
+}
+
 .bottomBar {
   position: fixed;
   bottom: 0;

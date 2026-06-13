@@ -6,7 +6,7 @@ import { useVoyageStore } from '@/store/useVoyageStore'
 import FuelChart from '@/components/FuelChart'
 import FormField from '@/components/FormField'
 import AnomalyBadge from '@/components/AnomalyBadge'
-import { mockEngineRecords, mockDailyConsumptions, weatherOptions } from '@/data/mockData'
+import { weatherOptions } from '@/data/mockData'
 import type { EngineRecord, DailyConsumption } from '@/types'
 import {
   checkConsumptionAnomaly,
@@ -48,8 +48,8 @@ const AnalysisPage: React.FC = () => {
     }
   }, [syncData])
 
-  const engineRecords = currentVoyage?.engineRecords.length ? currentVoyage.engineRecords : mockEngineRecords
-  const dailyConsumptions = currentVoyage?.dailyConsumptions.length ? currentVoyage.dailyConsumptions : mockDailyConsumptions
+  const engineRecords = currentVoyage?.engineRecords || []
+  const dailyConsumptions = currentVoyage?.dailyConsumptions || []
 
   const stats = useMemo(() => {
     const totalHours = engineRecords.reduce((sum, r) => sum + r.engineHours, 0)

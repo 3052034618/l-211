@@ -43,7 +43,7 @@ const TankPage: React.FC = () => {
     }
   }, [syncData])
 
-  const tanks = currentVoyage?.tanks.length ? currentVoyage.tanks : mockTanks
+  const tanks = currentVoyage?.tanks || []
 
   const filteredTanks = filter === 'all'
     ? tanks

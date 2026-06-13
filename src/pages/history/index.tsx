@@ -3,12 +3,12 @@ import { View, Text, ScrollView, Input } from '@tarojs/components'
 import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
-import { mockVoyageList, mockUser } from '@/data/mockData'
+import { mockUser } from '@/data/mockData'
 import type { Voyage, VoyageStatus } from '@/types'
 import dayjs from 'dayjs'
 
 const HistoryPage: React.FC = () => {
-  const { voyageList, setVoyageList, setCurrentVoyage, user, setUser, loadData, syncData } = useVoyageStore()
+  const { voyageList, setCurrentVoyage, user, setUser, loadData, syncData } = useVoyageStore()
   const [searchText, setSearchText] = useState('')
   const [activeFilter, setActiveFilter] = useState<VoyageStatus | 'all'>('all')
   const [, setIsRefreshing] = useState(false)
@@ -24,7 +24,6 @@ const HistoryPage: React.FC = () => {
   const initData = async () => {
     await loadData()
     if (!user) setUser(mockUser)
-    if (voyageList.length === 0) setVoyageList(mockVoyageList)
   }
 
   const handleRefresh = useCallback(async () => {

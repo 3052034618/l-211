@@ -63,6 +63,10 @@ const FleetPage: React.FC = () => {
     }
   }
 
+  const handleSyncReconciliation = () => {
+    Taro.navigateTo({ url: '/pages/sync-reconciliation/index' })
+  }
+
   const handleVesselClick = (vessel: Vessel) => {
     Taro.navigateTo({
       url: `/pages/vessel-detail/index?id=${vessel.id}&name=${vessel.name}`
@@ -155,6 +159,20 @@ const FleetPage: React.FC = () => {
             </View>
             <View className={styles.statLabel}>待处理异常</View>
           </View>
+        </View>
+      </View>
+
+      {/* 快捷操作 */}
+      <View className={styles.quickActions}>
+        <View className={styles.quickActionCard} onClick={handleSyncReconciliation}>
+          <View className={classnames(styles.quickActionIcon, styles.sync)}>
+            <Text>📊</Text>
+          </View>
+          <View className={styles.quickActionInfo}>
+            <Text className={styles.quickActionTitle}>同步对账</Text>
+            <Text className={styles.quickActionDesc}>按船/航次/时间查看补传批次</Text>
+          </View>
+          <Text className={styles.quickActionArrow}>›</Text>
         </View>
       </View>
 

@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Button, Textarea } from '@tarojs/components'
 import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
-import { mockAnomalyRecords, mockUser } from '@/data/mockData'
+import { mockUser } from '@/data/mockData'
 import type { AnomalyRecord, Voyage } from '@/types'
 import dayjs from 'dayjs'
 
@@ -26,12 +26,12 @@ const AnomalyDetailPage: React.FC = () => {
         setAnomaly(foundAnomaly)
         setVoyage(foundVoyage || null)
       } else {
-        const mockFound = mockAnomalyRecords.find(a => a.id === anomalyId)
-        if (mockFound) setAnomaly(mockFound)
+        Taro.showToast({
+          title: '记录不存在',
+          icon: 'none'
+        })
+        setTimeout(() => Taro.navigateBack(), 1500)
       }
-    }
-    if (!anomaly && !router.params.id) {
-      setAnomaly(mockAnomalyRecords[1])
     }
   })
 
@@ -125,7 +125,8 @@ const AnomalyDetailPage: React.FC = () => {
     return (
       <View className={styles.page}>
         <View style={{ padding: 100, textAlign: 'center' }}>
-          <Text>加载中...</Text>
+          <Text className={styles.emptyIcon}>⚠️</Text>
+          <Text className={styles.emptyText}>暂无记录</Text>
         </View>
       </View>
     )

@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import AnomalyBadge from '@/components/AnomalyBadge'
-import { mockCurrentVoyage, mockTanks } from '@/data/mockData'
+
 import { formatFuelAmount, calculateTankPercentage } from '@/utils/fuelCalculator'
 import dayjs from 'dayjs'
 
@@ -19,9 +19,19 @@ const HandoverPage: React.FC = () => {
   })
 
 
-  const voyage = currentVoyage || mockCurrentVoyage
-  const tanks = voyage?.tanks.length ? voyage.tanks : mockTanks
+  const voyage = currentVoyage
+  const tanks = voyage?.tanks || []
   const anomalies = voyage?.anomalies || []
+
+  if (!voyage) return (
+    <View className={styles.page}>
+      <View style={{ padding: 100, textAlign: 'center' }}>
+        <Text className={styles.emptyIcon}>📋</Text>
+        <Text className={styles.emptyText}>暂无航次信息</Text>
+        <Text className={styles.emptyDesc}>请先创建航次</Text>
+      </View>
+    </View>
+  )
 
   const unresolvedAnomalies = anomalies.filter(a => !a.isResolved)
 

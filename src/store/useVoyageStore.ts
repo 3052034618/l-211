@@ -3,12 +3,13 @@ import type {
   Voyage, Tank, RefuelRecord, EngineRecord, AnomalyRecord, 
   DailyConsumption, HandoverReport, User,
   Vessel, FleetSummary, OfflineQueueItem,
-  OfflineOperationType, ExportResult, ExportType
+  OfflineOperationType, ExportResult, ExportType, SyncRecord
 } from '@/types'
 import { 
   getCurrentVoyage, getVoyageList, saveCurrentVoyage, saveVoyageList, 
   getUser, saveUser,
-  getOfflineQueue, saveOfflineQueue
+  getOfflineQueue, saveOfflineQueue,
+  saveSyncRecords, loadSyncRecords as loadSyncRecordsFromStorage
 } from '@/utils/storage'
 import { mockVessels, mockFleetSummary } from '@/data/mockData'
 import dayjs from 'dayjs'
@@ -334,6 +335,10 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
     get().updateVoyage(currentVoyage.id, {
       anomalies: updatedRecords
     })
+    
+    if (isOffline) {
+      get().addToOfflineQueue('add_anomaly', currentVoyage.id, record)
+    }
     
     console.log('[VoyageStore] 添加异常记录成功', record.id)
   },
@@ -690,7 +695,7 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
 
   loadSyncRecords: async () => {
     try {
-      const records = await loadSyncRecords()
+      const records = await loadSyncRecordsFromStorage()
       if (records) {
         set({ syncRecords: records })
       }
@@ -845,7 +850,7 @@ export const useVoyageStore = create<VoyageState>((set, get) => ({
         getCurrentVoyage(),
         getVoyageList(),
         getOfflineQueue(),
-        loadSyncRecords()
+        loadSyncRecordsFromStorage()
       ])
       
       set({

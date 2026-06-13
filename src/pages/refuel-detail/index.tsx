@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Image } from '@tarojs/components'
 import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
-import { mockRefuelRecords } from '@/data/mockData'
+
 import type { RefuelRecord, Voyage } from '@/types'
 import dayjs from 'dayjs'
 
@@ -22,14 +22,12 @@ const RefuelDetailPage: React.FC = () => {
         setRecord(foundRecord)
         setVoyage(foundVoyage || null)
       } else {
-        const mockFound = mockRefuelRecords.find(r => r.id === recordId)
-        if (mockFound) {
-          setRecord(mockFound)
-        }
+        Taro.showToast({
+          title: '记录不存在',
+          icon: 'none'
+        })
+        setTimeout(() => Taro.navigateBack(), 1500)
       }
-    }
-    if (!record && !router.params.id) {
-      setRecord(mockRefuelRecords[0])
     }
   })
 
@@ -55,7 +53,8 @@ const RefuelDetailPage: React.FC = () => {
     return (
       <View className={styles.page}>
         <View style={{ padding: 100, textAlign: 'center' }}>
-          <Text>加载中...</Text>
+          <Text className={styles.emptyIcon}>⛽</Text>
+          <Text className={styles.emptyText}>暂无记录</Text>
         </View>
       </View>
     )

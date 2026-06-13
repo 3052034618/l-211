@@ -1,0 +1,513 @@
+@use '@/styles/variables.scss' as *;
+
+$color-primary: #1E88E5;
+$color-primary-dark: #1565C0;
+$color-success: #4CAF50;
+$color-partial: #FF9800;
+$color-failed: #F44336;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.noPermission {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: $spacing-xl;
+  text-align: center;
+
+  .icon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+    opacity: 0.5;
+  }
+
+  .title {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-sm;
+  }
+
+  .desc {
+    font-size: $font-size-md;
+    color: $color-text-tertiary;
+  }
+}
+
+.filterBar {
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  box-shadow: $shadow-float;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .filterRow {
+    display: flex;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .filterItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    .label {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+    }
+
+    .selectWrapper {
+      position: relative;
+
+      .select {
+        width: 100%;
+        height: 72rpx;
+        padding: 0 $spacing-md;
+        border: 1rpx solid $color-border;
+        border-radius: $radius-md;
+        font-size: $font-size-md;
+        color: $color-text-primary;
+        background: $color-bg-page;
+        appearance: none;
+
+        &:disabled {
+          opacity: 0.5;
+          background: $color-bg-hover;
+        }
+      }
+
+      .arrow {
+        position: absolute;
+        right: $spacing-md;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: $font-size-sm;
+        color: $color-text-tertiary;
+        pointer-events: none;
+      }
+    }
+
+    .dateInput {
+      width: 100%;
+      height: 72rpx;
+      padding: 0 $spacing-md;
+      border: 1rpx solid $color-border;
+      border-radius: $radius-md;
+      font-size: $font-size-md;
+      color: $color-text-primary;
+      background: $color-bg-page;
+    }
+  }
+}
+
+.summaryBar {
+  display: flex;
+  justify-content: space-around;
+  padding: $spacing-md $page-padding;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  margin-bottom: $spacing-md;
+
+  .statItem {
+    text-align: center;
+    color: $color-text-white;
+
+    .statValue {
+      font-size: $font-size-xxl;
+      font-weight: $font-weight-bold;
+      line-height: 1.2;
+    }
+
+    .statLabel {
+      font-size: $font-size-sm;
+      opacity: 0.9;
+      margin-top: $spacing-xs;
+    }
+  }
+
+  .divider {
+    width: 1rpx;
+    background: rgba($color-text-white, 0.3);
+  }
+}
+
+.recordList {
+  padding: 0 $page-padding;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.recordCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.995);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+
+  .headerLeft {
+    flex: 1;
+
+    .batchId {
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+      @include text-ellipsis;
+    }
+
+    .syncTime {
+      font-size: $font-size-sm;
+      color: $color-text-tertiary;
+    }
+  }
+
+  .statusBadge {
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-round;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+
+    &.success {
+      background: rgba($color-success, 0.1);
+      color: $color-success;
+    }
+
+    &.partial {
+      background: rgba($color-partial, 0.1);
+      color: $color-partial;
+    }
+
+    &.failed {
+      background: rgba($color-failed, 0.1);
+      color: $color-failed;
+    }
+  }
+}
+
+.cardBody {
+  padding: $spacing-md;
+
+  .infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+  }
+
+  .infoItem {
+    .label {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .value {
+      font-size: $font-size-md;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+    }
+
+    .voyageRoute {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      font-size: $font-size-md;
+      color: $color-text-primary;
+
+      .arrow {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .statsRow {
+    display: flex;
+    justify-content: space-around;
+    padding: $spacing-md;
+    background: $color-bg-page;
+    border-radius: $radius-md;
+    margin-bottom: $spacing-md;
+
+    .stat {
+      text-align: center;
+
+      .num {
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+
+        &.total {
+          color: $color-text-primary;
+        }
+
+        &.success {
+          color: $color-success;
+        }
+
+        &.failed {
+          color: $color-failed;
+        }
+      }
+
+      .label {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+        margin-top: $spacing-xs;
+      }
+    }
+  }
+
+  .typeTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+
+    .typeTag {
+      padding: $spacing-xs $spacing-sm;
+      background: rgba($color-primary, 0.08);
+      color: $color-primary;
+      border-radius: $radius-sm;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+.expandBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-sm;
+  border-top: 1rpx solid $color-divider;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  gap: $spacing-xs;
+  transition: all $transition-base;
+
+  .icon {
+    transition: transform $transition-base;
+
+    &.expanded {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.detailPanel {
+  background: $color-bg-page;
+  border-top: 1rpx solid $color-divider;
+  padding: $spacing-md;
+
+  .detailSection {
+    margin-bottom: $spacing-lg;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .sectionTitle {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    &::before {
+      content: '';
+      width: 6rpx;
+      height: 28rpx;
+      background: $color-primary;
+      border-radius: $radius-xs;
+    }
+  }
+
+  .timeCompare {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-md;
+    background: $color-bg-card;
+    border-radius: $radius-md;
+
+    .timeBox {
+      flex: 1;
+      text-align: center;
+
+      .label {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+        margin-bottom: $spacing-xs;
+      }
+
+      .value {
+        font-size: $font-size-md;
+        font-weight: $font-weight-medium;
+        color: $color-text-primary;
+      }
+    }
+
+    .arrow {
+      font-size: $font-size-lg;
+      color: $color-primary;
+      padding: 0 $spacing-md;
+    }
+  }
+
+  .typeDetailList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    .typeDetailItem {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: $spacing-md;
+      background: $color-bg-card;
+      border-radius: $radius-md;
+
+      .typeName {
+        font-size: $font-size-md;
+        color: $color-text-primary;
+      }
+
+      .typeCounts {
+        display: flex;
+        gap: $spacing-md;
+
+        .count {
+          font-size: $font-size-sm;
+
+          &.success {
+            color: $color-success;
+          }
+
+          &.failed {
+            color: $color-failed;
+          }
+        }
+      }
+    }
+  }
+
+  .failedList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    .failedItem {
+      padding: $spacing-md;
+      background: $color-bg-card;
+      border-radius: $radius-md;
+      border-left: 4rpx solid $color-failed;
+
+      .failedHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: $spacing-xs;
+
+        .failedType {
+          font-size: $font-size-md;
+          font-weight: $font-weight-medium;
+          color: $color-text-primary;
+        }
+
+        .recordId {
+          font-size: $font-size-xs;
+          color: $color-text-tertiary;
+          font-family: monospace;
+        }
+      }
+
+      .failedReason {
+        font-size: $font-size-sm;
+        color: $color-failed;
+        line-height: $line-height-normal;
+      }
+
+      .retryInfo {
+        margin-top: $spacing-sm;
+        padding-top: $spacing-sm;
+        border-top: 1rpx dashed $color-divider;
+
+        .retrySuccess {
+          font-size: $font-size-sm;
+          color: $color-success;
+        }
+
+        .retryFailed {
+          font-size: $font-size-sm;
+          color: $color-failed;
+        }
+      }
+    }
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xxl $page-padding;
+
+  .icon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+    opacity: 0.5;
+  }
+
+  .title {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-sm;
+  }
+
+  .desc {
+    font-size: $font-size-md;
+    color: $color-text-tertiary;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-xxl;
+
+  .text {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin-left: $spacing-sm;
+  }
+}
+
+.loadMore {
+  text-align: center;
+  padding: $spacing-lg $page-padding;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}

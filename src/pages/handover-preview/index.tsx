@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Button } from '@tarojs/components'
 import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
-import { mockCurrentVoyage, mockUser } from '@/data/mockData'
+import { mockUser } from '@/data/mockData'
 import type { HandoverReport, Voyage } from '@/types'
 import dayjs from 'dayjs'
 
@@ -27,35 +27,19 @@ const HandoverPreviewPage: React.FC = () => {
     
     setVoyage(targetVoyage || null)
 
-    if (targetVoyage?.handoverReport) {
+    if (!targetVoyage) {
+      setReport(null)
+      return
+    }
+
+    if (targetVoyage.handoverReport) {
       setReport(targetVoyage.handoverReport)
     } else {
       const generated = generateHandoverReport()
       if (generated) {
         setReport(generated)
       } else {
-        const fallbackVoyage = targetVoyage || mockCurrentVoyage
-        setReport({
-          id: `handover_${Date.now()}`,
-          voyageId: fallbackVoyage.id,
-          vesselName: fallbackVoyage.vesselName,
-          fromPort: fallbackVoyage.fromPort,
-          toPort: fallbackVoyage.toPort,
-          departureDate: fallbackVoyage.departureDate,
-          arrivalDate: dayjs().format('YYYY-MM-DD'),
-          totalFuelConsumed: fallbackVoyage.totalFuelConsumed || 0,
-          totalRefueled: fallbackVoyage.refuelRecords.reduce((sum, r) => sum + r.quantity, 0),
-          avgDailyConsumption: fallbackVoyage.avgDailyConsumption || 0,
-          tankLevels: fallbackVoyage.tanks.map(t => ({
-            tankId: t.id,
-            tankName: t.name,
-            level: t.currentLevel,
-            fuelType: t.fuelType
-          })),
-          anomalies: fallbackVoyage.anomalies,
-          preparedBy: mockUser.name,
-          status: 'draft'
-        })
+        setReport(null)
       }
     }
   })
@@ -180,7 +164,9 @@ const HandoverPreviewPage: React.FC = () => {
     return (
       <View className={styles.page}>
         <View style={{ padding: 100, textAlign: 'center' }}>
-          <Text>加载中...</Text>
+          <Text className={styles.emptyIcon}>📋</Text>
+          <Text className={styles.emptyText}>暂无交接单数据</Text>
+          <Text className={styles.emptyDesc}>请先生成交接单</Text>
         </View>
       </View>
     )

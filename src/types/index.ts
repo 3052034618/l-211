@@ -197,6 +197,7 @@ export type OfflineOperationType =
   | 'add_refuel' 
   | 'add_engine_record' 
   | 'add_daily_consumption' 
+  | 'add_anomaly'
   | 'update_tank' 
   | 'resolve_anomaly'
   | 'create_voyage'

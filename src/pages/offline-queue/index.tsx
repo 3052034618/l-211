@@ -10,6 +10,7 @@ const OPERATION_TYPE_MAP: Record<OfflineOperationType, string> = {
   add_refuel: '加油记录',
   update_tank: '油舱更新',
   resolve_anomaly: '异常处理',
+  add_anomaly: '新增异常',
   create_voyage: '创建航次',
   confirm_handover: '交接确认',
   add_engine_record: '主机记录',

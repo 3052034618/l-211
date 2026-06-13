@@ -6,7 +6,7 @@ import styles from './index.module.scss'
 import { useVoyageStore } from '@/store/useVoyageStore'
 import StatCard from '@/components/StatCard'
 import AnomalyBadge from '@/components/AnomalyBadge'
-import { mockCurrentVoyage, mockVoyageList, mockUser, mockManagerUser } from '@/data/mockData'
+import { mockUser, mockManagerUser } from '@/data/mockData'
 import { formatFuelAmount } from '@/utils/fuelCalculator'
 import dayjs from 'dayjs'
 import type { User } from '@/types'
@@ -18,12 +18,9 @@ const VoyagePage: React.FC = () => {
     isOffline,
     user,
     offlineQueue,
-    setCurrentVoyage,
-    setVoyageList,
     setUser,
     loadData,
-    syncData,
-    syncOfflineData
+    syncData
   } = useVoyageStore()
 
   const [, setIsRefreshing] = useState(false)
@@ -41,12 +38,6 @@ const VoyagePage: React.FC = () => {
     
     if (!useVoyageStore.getState().user) {
       setUser(mockUser)
-    }
-    if (!useVoyageStore.getState().currentVoyage) {
-      setCurrentVoyage(mockCurrentVoyage)
-    }
-    if (useVoyageStore.getState().voyageList.length === 0) {
-      setVoyageList(mockVoyageList)
     }
   }
 

@@ -89,6 +89,14 @@ const VoyageDetailPage: React.FC = () => {
     }
   }
 
+  const handleArchiveClick = () => {
+    if (voyageId) {
+      Taro.navigateTo({
+        url: `/pages/voyage-archive/index?id=${voyageId}`
+      })
+    }
+  }
+
   const handleExportDaily = async () => {
     if (!voyage) return
     try {
@@ -389,6 +397,20 @@ const VoyageDetailPage: React.FC = () => {
             <Text className={styles.emptyText}>暂无交接单</Text>
           </View>
         )}
+      </View>
+
+      {/* 航次档案时间线入口 */}
+      <View className={styles.sectionCard} onClick={handleArchiveClick}>
+        <View className={styles.archiveEntry}>
+          <View className={styles.archiveIcon}>
+            <Text>📚</Text>
+          </View>
+          <View className={styles.archiveInfo}>
+            <Text className={styles.archiveTitle}>航次档案时间线</Text>
+            <Text className={styles.archiveDesc}>查看本次航程所有操作记录时间线</Text>
+          </View>
+          <Text className={styles.archiveArrow}>›</Text>
+        </View>
       </View>
 
       <View style={{ height: 40 }} />
