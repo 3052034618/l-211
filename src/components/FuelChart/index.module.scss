@@ -1,0 +1,114 @@
+@use '@/styles/variables.scss' as *;
+
+.chartContainer {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.chartTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.chartSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.chartBody {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.chartRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.chartLabel {
+  width: 140rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.chartBarContainer {
+  flex: 1;
+  height: 32rpx;
+  background: $color-bg-hover;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  position: relative;
+}
+
+.chartBar {
+  height: 100%;
+  border-radius: $radius-sm;
+  transition: width $transition-slow;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: $spacing-sm;
+
+  &.normal {
+    background: linear-gradient(90deg, $color-fuel-normal 0%, rgba($color-fuel-normal, 0.7) 100%);
+  }
+
+  &.warning {
+    background: linear-gradient(90deg, $color-fuel-warning 0%, rgba($color-fuel-warning, 0.7) 100%);
+  }
+
+  &.danger {
+    background: linear-gradient(90deg, $color-fuel-danger 0%, rgba($color-fuel-danger, 0.7) 100%);
+  }
+
+  &.refuel {
+    background: linear-gradient(90deg, $color-fuel-refuel 0%, rgba($color-fuel-refuel, 0.7) 100%);
+  }
+}
+
+.chartValue {
+  width: 120rpx;
+  text-align: right;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex-shrink: 0;
+}
+
+.chartFooter {
+  margin-top: $spacing-lg;
+  display: flex;
+  justify-content: space-around;
+  padding-top: $spacing-lg;
+  border-top: 1rpx solid $color-divider;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.legendDot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: $radius-round;
+}
+
+.legendText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}

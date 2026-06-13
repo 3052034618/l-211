@@ -1,0 +1,286 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.headerSection {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  padding: $spacing-lg $page-padding $spacing-xl;
+  border-radius: 0 0 $radius-xl $radius-xl;
+  margin-bottom: -$spacing-lg;
+  position: relative;
+}
+
+.syncStatus {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-md;
+}
+
+.syncIndicator {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: $radius-round;
+  background: $color-success;
+
+  &.offline {
+    background: $color-warning;
+  }
+}
+
+.syncText {
+  font-size: $font-size-sm;
+  color: rgba($color-text-white, 0.8);
+}
+
+.voyageOverview {
+  color: $color-text-white;
+}
+
+.vesselName {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-sm;
+}
+
+.voyageRoute {
+  font-size: $font-size-lg;
+  opacity: 0.9;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.routeArrow {
+  opacity: 0.7;
+}
+
+.voyageInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.voyageDays {
+  display: flex;
+  align-items: baseline;
+  gap: $spacing-xs;
+}
+
+.daysNumber {
+  font-size: 64rpx;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+}
+
+.daysLabel {
+  font-size: $font-size-md;
+  opacity: 0.8;
+}
+
+.voyageStatus {
+  background: rgba($color-text-white, 0.2);
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.statsSection {
+  padding: 0 $page-padding;
+  margin-top: $spacing-xl;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.quickActions {
+  padding: $spacing-lg $page-padding;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.actionsScroll {
+  display: flex;
+  gap: $spacing-lg;
+  padding: $spacing-sm 0;
+  @include scroll-x-container;
+}
+
+.actionItem {
+  @include scroll-x-item(140rpx);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.actionIcon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.create {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  }
+
+  &.tank {
+    background: linear-gradient(135deg, $color-success 0%, rgba($color-success, 0.7) 100%);
+  }
+
+  &.refuel {
+    background: linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%);
+  }
+
+  &.engine {
+    background: linear-gradient(135deg, $color-warning 0%, #FFB74D 100%);
+  }
+
+  &.handover {
+    background: linear-gradient(135deg, #795548 0%, #A1887F 100%);
+  }
+}
+
+.actionLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: center;
+}
+
+.anomalySection {
+  padding: 0 $page-padding $spacing-lg;
+}
+
+.anomalyCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  border-left: 6rpx solid $color-warning;
+  box-shadow: $shadow-card;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  &.high {
+    border-left-color: $color-error;
+  }
+}
+
+.anomalyContent {
+  flex: 1;
+}
+
+.anomalyTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.anomalyType {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.anomalyDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.anomalyDate {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.historySection {
+  padding: 0 $page-padding $spacing-xl;
+}
+
+.historyItem {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.historyVessel {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.historyStatus {
+  font-size: $font-size-sm;
+  color: $color-success;
+  background: rgba($color-success, 0.1);
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+}
+
+.historyRoute {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.historyStats {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-text-tertiary;
+  font-size: $font-size-md;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.5;
+}

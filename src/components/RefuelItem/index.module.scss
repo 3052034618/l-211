@@ -1,0 +1,115 @@
+@use '@/styles/variables.scss' as *;
+
+.refuelItem {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.portInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.portName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.refuelTag {
+  background: rgba($color-fuel-refuel, 0.1);
+  color: $color-fuel-refuel;
+  font-size: $font-size-sm;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+}
+
+.refuelDate {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.itemBody {
+  display: flex;
+  gap: $spacing-xl;
+  margin-bottom: $spacing-md;
+}
+
+.infoColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.infoValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+
+  &.quantity {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-fuel-refuel;
+  }
+
+  &.amount {
+    color: $color-warning;
+  }
+}
+
+.itemFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.tankInfo {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.operator {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.receiptIcon {
+  width: 48rpx;
+  height: 48rpx;
+  background: $color-bg-hover;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+  font-size: 24rpx;
+}

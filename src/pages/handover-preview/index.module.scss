@@ -1,0 +1,378 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.reportContainer {
+  background: $color-bg-card;
+  margin: $spacing-lg $page-padding;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  box-shadow: $shadow-card;
+}
+
+.reportHeader {
+  text-align: center;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2rpx solid $color-divider;
+  margin-bottom: $spacing-lg;
+
+  .reportTitle {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+
+  .reportSubtitle {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  .reportId {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    margin-top: $spacing-sm;
+  }
+}
+
+.voyageInfo {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+
+  .route {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    .port {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-primary-dark;
+    }
+
+    .arrow {
+      font-size: $font-size-lg;
+      color: $color-primary;
+    }
+  }
+
+  .vesselName {
+    text-align: center;
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-sm;
+  }
+
+  .dateRange {
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+
+  .statItem {
+    text-align: center;
+    padding: $spacing-md;
+    background: $color-bg-hover;
+    border-radius: $radius-md;
+
+    .statValue {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $color-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .statLabel {
+      font-size: $font-size-xs;
+      color: $color-text-secondary;
+    }
+
+    .statUnit {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+}
+
+.section {
+  margin-bottom: $spacing-lg;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1rpx solid $color-divider;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: $spacing-sm 0;
+
+  .label {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    flex-shrink: 0;
+  }
+
+  .value {
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    text-align: right;
+    flex: 1;
+    margin-left: $spacing-md;
+
+    &.highlight {
+      font-weight: $font-weight-semibold;
+      color: $color-primary;
+    }
+  }
+}
+
+.tankList {
+  .tankItem {
+    background: $color-bg-hover;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    margin-bottom: $spacing-sm;
+
+    .tankHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-sm;
+
+      .tankName {
+        font-size: $font-size-md;
+        font-weight: $font-weight-medium;
+        color: $color-text-primary;
+      }
+
+      .fuelType {
+        font-size: $font-size-xs;
+        padding: $spacing-xs $spacing-sm;
+        background: $color-bg-card;
+        border-radius: $radius-round;
+        color: $color-text-secondary;
+      }
+    }
+
+    .tankBody {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+
+      .progressBar {
+        flex: 1;
+        height: 16rpx;
+        background: $color-bg-card;
+        border-radius: $radius-round;
+        overflow: hidden;
+
+        .progressFill {
+          height: 100%;
+          border-radius: $radius-round;
+          background: $color-primary;
+
+          &.warning { background: $color-warning; }
+          &.danger { background: $color-error; }
+        }
+      }
+
+      .levelText {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-semibold;
+        color: $color-text-primary;
+        min-width: 120rpx;
+        text-align: right;
+      }
+    }
+
+    .tankFooter {
+      display: flex;
+      justify-content: space-between;
+      margin-top: $spacing-sm;
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+}
+
+.anomalyList {
+  .anomalyItem {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    padding: $spacing-sm 0;
+    border-bottom: 1rpx solid $color-divider;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .statusIcon {
+      font-size: $font-size-md;
+      flex-shrink: 0;
+    }
+
+    .anomalyContent {
+      flex: 1;
+
+      .anomalyDesc {
+        font-size: $font-size-sm;
+        color: $color-text-primary;
+        margin-bottom: $spacing-xs;
+      }
+
+      .anomalyMeta {
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+      }
+    }
+
+    .severityBadge {
+      font-size: $font-size-xs;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-round;
+      flex-shrink: 0;
+
+      &.low { background: rgba($color-warning, 0.1); color: $color-warning; }
+      &.medium { background: rgba(#FF5722, 0.1); color: #FF5722; }
+      &.high { background: rgba($color-error, 0.1); color: $color-error; }
+      &.resolved { background: rgba($color-success, 0.1); color: $color-success; }
+    }
+  }
+
+  .emptyAnomaly {
+    text-align: center;
+    padding: $spacing-lg;
+    color: $color-text-tertiary;
+    font-size: $font-size-sm;
+  }
+}
+
+.signatureSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 2rpx dashed $color-divider;
+
+  .signatureItem {
+    text-align: center;
+
+    .signatureLabel {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-sm;
+    }
+
+    .signatureName {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .signatureDate {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+
+    .signaturePlaceholder {
+      width: 100%;
+      height: 100rpx;
+      border: 2rpx dashed $color-border;
+      border-radius: $radius-md;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $color-text-tertiary;
+      font-size: $font-size-sm;
+      margin-bottom: $spacing-xs;
+    }
+  }
+}
+
+.reportFooter {
+  text-align: center;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 1rpx solid $color-divider;
+
+  .footerText {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    line-height: 1.8;
+  }
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: $shadow-float;
+  display: flex;
+  gap: $spacing-md;
+
+  .btnSecondary {
+    flex: 1;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-bg-hover;
+    color: $color-text-secondary;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    @include button-reset;
+  }
+
+  .btnPrimary {
+    flex: 2;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-primary;
+    color: $color-text-white;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    @include button-reset;
+
+    &:active {
+      background: $color-primary-dark;
+    }
+
+    &:disabled {
+      background: $color-text-disabled;
+    }
+  }
+}

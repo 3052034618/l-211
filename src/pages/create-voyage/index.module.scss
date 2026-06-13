@@ -1,0 +1,205 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.header {
+  background: $color-bg-header;
+  padding: $spacing-lg $page-padding $spacing-xl;
+  color: $color-text-white;
+
+  .title {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-xs;
+  }
+
+  .subtitle {
+    font-size: $font-size-sm;
+    opacity: 0.85;
+  }
+}
+
+.formContainer {
+  padding: $page-padding;
+  margin-top: -$spacing-lg;
+}
+
+.formCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  .icon {
+    font-size: $font-size-xl;
+  }
+}
+
+.tankSection {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .tankHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+
+    .title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      .icon {
+        font-size: $font-size-xl;
+      }
+    }
+
+    .addBtn {
+      font-size: $font-size-sm;
+      color: $color-primary;
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+    }
+  }
+
+  .tankItem {
+    background: $color-bg-hover;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    .tankHeaderRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-md;
+
+      .tankName {
+        font-size: $font-size-md;
+        font-weight: $font-weight-medium;
+        color: $color-text-primary;
+      }
+
+      .removeBtn {
+        font-size: $font-size-sm;
+        color: $color-error;
+      }
+    }
+
+    .tankFields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-md;
+    }
+  }
+
+  .emptyTank {
+    text-align: center;
+    padding: $spacing-xl;
+    color: $color-text-tertiary;
+    font-size: $font-size-sm;
+
+    .icon {
+      font-size: 64rpx;
+      margin-bottom: $spacing-sm;
+      opacity: 0.5;
+    }
+  }
+}
+
+.summaryCard {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+
+  .summaryTitle {
+    font-size: $font-size-md;
+    color: $color-primary-dark;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-md;
+  }
+
+  .summaryRow {
+    display: flex;
+    justify-content: space-between;
+    padding: $spacing-sm 0;
+
+    .label {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+    }
+
+    .value {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $color-primary-dark;
+    }
+  }
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: $shadow-float;
+  display: flex;
+  gap: $spacing-md;
+
+  .btnCancel {
+    flex: 1;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-bg-hover;
+    color: $color-text-secondary;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    @include button-reset;
+  }
+
+  .btnSubmit {
+    flex: 2;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-primary;
+    color: $color-text-white;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    @include button-reset;
+
+    &:active {
+      background: $color-primary-dark;
+    }
+
+    &:disabled {
+      background: $color-text-disabled;
+    }
+  }
+}

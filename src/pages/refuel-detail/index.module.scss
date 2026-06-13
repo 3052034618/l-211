@@ -1,0 +1,259 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.headerCard {
+  background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
+  margin: $spacing-lg $page-padding;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  color: $color-text-white;
+  box-shadow: $shadow-card;
+
+  .portLabel {
+    font-size: $font-size-sm;
+    opacity: 0.8;
+    margin-bottom: $spacing-xs;
+  }
+
+  .portName {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-md;
+  }
+
+  .amountRow {
+    display: flex;
+    align-items: baseline;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-xs;
+
+    .amount {
+      font-size: 48rpx;
+      font-weight: $font-weight-bold;
+    }
+
+    .unit {
+      font-size: $font-size-lg;
+      opacity: 0.9;
+    }
+  }
+
+  .totalAmount {
+    font-size: $font-size-md;
+    opacity: 0.85;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: $spacing-xs $spacing-sm;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: $radius-round;
+    font-size: $font-size-xs;
+    margin-top: $spacing-sm;
+  }
+}
+
+.sectionCard {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: $spacing-sm 0;
+    border-bottom: 1rpx solid $color-divider;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      flex-shrink: 0;
+    }
+
+    .value {
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+      text-align: right;
+      flex: 1;
+      margin-left: $spacing-md;
+      word-break: break-all;
+
+      &.highlight {
+        font-weight: $font-weight-semibold;
+        color: $color-primary;
+      }
+
+      &.success {
+        color: $color-success;
+      }
+
+      &.warning {
+        color: $color-warning;
+      }
+    }
+  }
+}
+
+.receiptSection {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .receiptImage {
+    width: 100%;
+    height: 400rpx;
+    border-radius: $radius-md;
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+    .placeholder {
+      text-align: center;
+      color: $color-primary-dark;
+
+      .icon {
+        font-size: 80rpx;
+        margin-bottom: $spacing-sm;
+        display: block;
+      }
+
+      .text {
+        font-size: $font-size-sm;
+      }
+    }
+
+    .hasImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .imageHint {
+    text-align: center;
+    margin-top: $spacing-sm;
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+}
+
+.remarksSection {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .remarksContent {
+    background: $color-bg-hover;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.6;
+    min-height: 100rpx;
+  }
+
+  .emptyRemarks {
+    color: $color-text-tertiary;
+    font-style: italic;
+  }
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: $shadow-float;
+  display: flex;
+  gap: $spacing-md;
+
+  .btnSecondary {
+    flex: 1;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-bg-hover;
+    color: $color-text-secondary;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    @include button-reset;
+  }
+
+  .btnPrimary {
+    flex: 2;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-primary;
+    color: $color-text-white;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    @include button-reset;
+
+    &:active {
+      background: $color-primary-dark;
+    }
+  }
+}

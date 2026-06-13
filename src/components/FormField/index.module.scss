@@ -1,0 +1,96 @@
+@use '@/styles/variables.scss' as *;
+
+.formField {
+  margin-bottom: $spacing-lg;
+}
+
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-sm;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.required {
+  color: $color-error;
+}
+
+.fieldInput {
+  width: 100%;
+  height: $button-height-md;
+  padding: 0 $spacing-md;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  transition: all $transition-base;
+
+  &:focus {
+    border-color: $color-primary;
+    background: $color-bg-card;
+  }
+
+  &::placeholder {
+    color: $color-text-disabled;
+  }
+}
+
+.fieldTextarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: $spacing-md;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  line-height: $line-height-normal;
+}
+
+.fieldSelect {
+  width: 100%;
+  height: $button-height-md;
+  padding: 0 $spacing-md;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.placeholder {
+    color: $color-text-disabled;
+  }
+}
+
+.selectArrow {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.fieldError {
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $color-error;
+}
+
+.fieldUnit {
+  position: absolute;
+  right: $spacing-md;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.inputWrapper {
+  position: relative;
+}

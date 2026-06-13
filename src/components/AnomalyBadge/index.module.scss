@@ -1,0 +1,39 @@
+@use '@/styles/variables.scss' as *;
+
+.anomalyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  &.low {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &.medium {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+
+  &.high {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+
+  &.resolved {
+    background: rgba($color-text-tertiary, 0.1);
+    color: $color-text-tertiary;
+  }
+}
+
+.badgeIcon {
+  font-size: $font-size-md;
+}
+
+.badgeText {
+  white-space: nowrap;
+}

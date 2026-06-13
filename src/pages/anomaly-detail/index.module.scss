@@ -1,0 +1,366 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.headerCard {
+  margin: $spacing-lg $page-padding;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  color: $color-text-white;
+  box-shadow: $shadow-card;
+
+  &.low {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  }
+
+  &.medium {
+    background: linear-gradient(135deg, #FF5722 0%, #E64A19 100%);
+  }
+
+  &.high {
+    background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
+  }
+
+  &.resolved {
+    background: linear-gradient(135deg, #26A69A 0%, #00897B 100%);
+  }
+
+  .severityBadge {
+    display: inline-block;
+    padding: $spacing-xs $spacing-md;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: $radius-round;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-md;
+  }
+
+  .description {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-sm;
+  }
+
+  .date {
+    font-size: $font-size-sm;
+    opacity: 0.85;
+  }
+
+  .deviation {
+    margin-top: $spacing-lg;
+    display: flex;
+    align-items: baseline;
+    gap: $spacing-sm;
+
+    .deviationValue {
+      font-size: 48rpx;
+      font-weight: $font-weight-bold;
+    }
+
+    .deviationLabel {
+      font-size: $font-size-md;
+      opacity: 0.9;
+    }
+  }
+}
+
+.sectionCard {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: $spacing-sm 0;
+    border-bottom: 1rpx solid $color-divider;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      flex-shrink: 0;
+    }
+
+    .value {
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+      text-align: right;
+      flex: 1;
+      margin-left: $spacing-md;
+
+      &.highlight {
+        font-weight: $font-weight-semibold;
+        color: $color-primary;
+      }
+
+      &.danger {
+        color: $color-error;
+        font-weight: $font-weight-semibold;
+      }
+
+      &.success {
+        color: $color-success;
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+}
+
+.comparisonSection {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .comparisonBar {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    .barItem {
+      flex: 1;
+      text-align: center;
+
+      .barValue {
+        font-size: $font-size-xxl;
+        font-weight: $font-weight-bold;
+        margin-bottom: $spacing-xs;
+
+        &.expected {
+          color: $color-success;
+        }
+
+        &.actual {
+          color: $color-error;
+        }
+      }
+
+      .barLabel {
+        font-size: $font-size-xs;
+        color: $color-text-secondary;
+      }
+
+      .barUnit {
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+      }
+    }
+
+    .barArrow {
+      font-size: $font-size-xxl;
+      color: $color-error;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  .barVisual {
+    height: 24rpx;
+    background: $color-bg-hover;
+    border-radius: $radius-round;
+    position: relative;
+    overflow: hidden;
+
+    .barFillExpected {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: $color-success;
+      opacity: 0.6;
+      border-radius: $radius-round;
+    }
+
+    .barFillActual {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: $color-error;
+      border-radius: $radius-round;
+    }
+
+    .markerLine {
+      position: absolute;
+      top: -8rpx;
+      bottom: -8rpx;
+      width: 4rpx;
+      background: $color-error;
+      border-radius: 2rpx;
+    }
+  }
+
+  .barLabels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: $spacing-sm;
+
+    .barLabel {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+}
+
+.resolutionSection {
+  background: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .resolvedInfo {
+    background: rgba($color-success, 0.1);
+    border-radius: $radius-md;
+    padding: $spacing-md;
+
+    .resolvedHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-sm;
+
+      .resolvedBy {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $color-success;
+      }
+
+      .resolvedAt {
+        font-size: $font-size-xs;
+        color: $color-text-secondary;
+      }
+    }
+
+    .resolutionText {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      line-height: 1.6;
+    }
+  }
+
+  .formGroup {
+    .formLabel {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-sm;
+    }
+
+    .formTextarea {
+      width: 100%;
+      min-height: 200rpx;
+      padding: $spacing-md;
+      background: $color-bg-hover;
+      border-radius: $radius-md;
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+      border: none;
+      outline: none;
+      line-height: 1.6;
+      box-sizing: border-box;
+    }
+
+    .formHint {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-top: $spacing-sm;
+    }
+  }
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: $shadow-float;
+  display: flex;
+  gap: $spacing-md;
+
+  .btnIgnore {
+    flex: 1;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-bg-hover;
+    color: $color-text-secondary;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    @include button-reset;
+  }
+
+  .btnResolve {
+    flex: 2;
+    height: $button-height-lg;
+    border-radius: $radius-button;
+    background: $color-success;
+    color: $color-text-white;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    @include button-reset;
+
+    &:active {
+      background: #00897B;
+    }
+
+    &:disabled {
+      background: $color-text-disabled;
+    }
+  }
+}
